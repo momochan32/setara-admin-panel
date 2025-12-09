@@ -1,0 +1,43 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Environment variables (if added in future)
+.env
+.env.local
+
+# Node modules (if added in future)
+node_modules/
+
+# Composer (if added in future)
+vendor/
+composer.lock
+
+# Backup files
+*.bak
+*.backup
+
+# Cache
+cache/
+*.cache

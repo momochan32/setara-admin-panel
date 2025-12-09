@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0;url=login.php">
+    <title>Redirecting to SETARA Admin Panel...</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6DB33F 0%, #5a9633 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+        }
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        h1 { margin-bottom: 10px; }
+        p { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SETARA Admin Panel</h1>
+        <div class="loader"></div>
+        <p>Redirecting to login page...</p>
+        <p><small>If you are not redirected, <a href="login.php" style="color: white; text-decoration: underline;">click here</a></small></p>
+    </div>
+</body>
+</html>
