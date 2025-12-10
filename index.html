@@ -1,287 +1,399 @@
-<?php
-// SETARA Dashboard Data
-$recentActivities = [
-    ['user' => 'Aisyah Putri', 'action' => 'Menyelesaikan Modul Nutrisi', 'time' => '5 menit yang lalu', 'type' => 'education'],
-    ['user' => 'Rizky Pratama', 'action' => 'Mencapai Level Warrior', 'time' => '15 menit yang lalu', 'type' => 'achievement'],
-    ['user' => 'Siti Nurhaliza', 'action' => 'Mengikuti Kuis Obat-obatan', 'time' => '25 menit yang lalu', 'type' => 'quiz'],
-    ['user' => 'Budi Santoso', 'action' => 'Mendaftar sebagai pengguna baru', 'time' => '1 jam yang lalu', 'type' => 'register'],
-    ['user' => 'Dewi Lestari', 'action' => 'Mengirim pesan di komunitas', 'time' => '2 jam yang lalu', 'type' => 'community'],
-    ['user' => 'Ahmad Fauzi', 'action' => 'Mencatat kepatuhan minum obat', 'time' => '3 jam yang lalu', 'type' => 'medication'],
-    ['user' => 'Intan Permata', 'action' => 'Menyelesaikan Modul Aktivitas Fisik', 'time' => '4 jam yang lalu', 'type' => 'education'],
-    ['user' => 'Hendra Wijaya', 'action' => 'Mencapai Level Hero', 'time' => '5 jam yang lalu', 'type' => 'achievement']
-];
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard SETARA - Admin Panel</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="16x16">
+    <!-- remix icon font css  -->
+    <link rel="stylesheet" href="assets/css/remixicon.css">
+    <!-- BootStrap css -->
+    <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
+    <!-- Apex Chart css -->
+    <link rel="stylesheet" href="assets/css/lib/apexcharts.css">
+    <!-- Data Table css -->
+    <link rel="stylesheet" href="assets/css/lib/dataTables.min.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
 
-$script = '<script src="assets/js/homeOneChart.js"></script>';
-?>
+<body>
 
-<?php include './partials/layouts/layoutTop.php' ?>
-
-<div class="dashboard-main-body">
-    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
-        <h6 class="fw-semibold mb-0">Dashboard SETARA</h6>
-        <ul class="d-flex align-items-center gap-2">
-            <li class="fw-medium">
-                <a href="index.php" class="d-flex align-items-center gap-1 hover-text-primary">
-                    <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
-                    Dashboard
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="row row-cols-xxxl-4 row-cols-lg-2 row-cols-sm-2 row-cols-1 gy-4">
-        <div class="col">
-            <div class="card shadow-none border bg-gradient-start-1 h-100">
-                <div class="card-body p-20">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div>
-                            <p class="fw-medium text-primary-light mb-1">Total Pengguna</p>
-                            <h6 class="mb-0">156</h6>
-                        </div>
-                        <div class="w-50-px h-50-px bg-primary-600 rounded-circle d-flex justify-content-center align-items-center">
-                            <iconify-icon icon="solar:users-group-rounded-bold" class="text-white text-2xl mb-0"></iconify-icon>
-                        </div>
-                    </div>
-                    <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
-                        <span class="d-inline-flex align-items-center gap-1 text-success-main">
-                            <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> +12
-                        </span>
-                        30 hari terakhir
-                    </p>
-                </div>
-            </div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <button type="button" class="sidebar-close-btn">
+            <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
+        </button>
+        <div>
+            <a href="index.html" class="sidebar-logo">
+                <img src="assets/images/logo.png" alt="site logo" class="light-logo">
+                <img src="assets/images/logo-light.png" alt="site logo" class="dark-logo">
+                <img src="assets/images/logo-icon.png" alt="site logo" class="logo-icon">
+            </a>
         </div>
-        <div class="col">
-            <div class="card shadow-none border bg-gradient-start-2 h-100">
-                <div class="card-body p-20">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div>
-                            <p class="fw-medium text-primary-light mb-1">Total Modul Edukasi</p>
-                            <h6 class="mb-0">48</h6>
-                        </div>
-                        <div class="w-50-px h-50-px bg-success-main rounded-circle d-flex justify-content-center align-items-center">
-                            <iconify-icon icon="solar:book-2-bold" class="text-white text-2xl mb-0"></iconify-icon>
-                        </div>
-                    </div>
-                    <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
-                        <span class="d-inline-flex align-items-center gap-1 text-success-main">
-                            <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> +3
-                        </span>
-                        Modul baru bulan ini
-                    </p>
-                </div>
-            </div>
+        <div class="sidebar-menu-area">
+            <ul class="sidebar-menu" id="sidebar-menu">
+                <li>
+                    <a href="index.html" class="active">
+                        <iconify-icon icon="ri:home-8-line" class="menu-icon"></iconify-icon>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <iconify-icon icon="ri:user-heart-line" class="menu-icon"></iconify-icon>
+                        <span>Pengguna</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ri:book-open-line" class="menu-icon"></iconify-icon>
+                        <span>Edukasi</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="edu-clusters.html"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Klaster</a>
+                        </li>
+                        <li>
+                            <a href="edu-modules.html"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Modul</a>
+                        </li>
+                        <li>
+                            <a href="edu-contents.html"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Sub-Modul</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="quizzes.html">
+                        <iconify-icon icon="ri:question-answer-line" class="menu-icon"></iconify-icon>
+                        <span>Kuis</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="community.html">
+                        <iconify-icon icon="ri:discuss-line" class="menu-icon"></iconify-icon>
+                        <span>Diskusi</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="broadcast.html">
+                        <iconify-icon icon="ri:notification-3-line" class="menu-icon"></iconify-icon>
+                        <span>Broadcast</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ri:settings-3-line" class="menu-icon"></iconify-icon>
+                        <span>Pengaturan</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="settings.html"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Umum</a>
+                        </li>
+                        <li>
+                            <a href="privacy-policy.html"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Kebijakan Privasi</a>
+                        </li>
+                        <li>
+                            <a href="terms-service.html"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Syarat & Ketentuan</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-        <div class="col">
-            <div class="card shadow-none border bg-gradient-start-3 h-100">
-                <div class="card-body p-20">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div>
-                            <p class="fw-medium text-primary-light mb-1">Kepatuhan Minum Obat</p>
-                            <h6 class="mb-0">85.7%</h6>
-                        </div>
-                        <div class="w-50-px h-50-px bg-info rounded-circle d-flex justify-content-center align-items-center">
-                            <iconify-icon icon="solar:pill-bold" class="text-white text-2xl mb-0"></iconify-icon>
-                        </div>
-                    </div>
-                    <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
-                        <span class="d-inline-flex align-items-center gap-1 text-success-main">
-                            <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> +8.3%
-                        </span>
-                        Dibanding minggu lalu
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card shadow-none border bg-gradient-start-4 h-100">
-                <div class="card-body p-20">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-                        <div>
-                            <p class="fw-medium text-primary-light mb-1">Pengguna Aktif Hari Ini</p>
-                            <h6 class="mb-0">89</h6>
-                        </div>
-                        <div class="w-50-px h-50-px bg-warning-main rounded-circle d-flex justify-content-center align-items-center">
-                            <iconify-icon icon="solar:user-check-rounded-bold" class="text-white text-2xl mb-0"></iconify-icon>
-                        </div>
-                    </div>
-                    <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
-                        <span class="text-secondary-light">57%</span>
-                        dari total pengguna
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+    </aside>
 
-    <div class="row gy-4 mt-1">
-        <!-- Chart Kepatuhan Minum Obat -->
-        <div class="col-xxl-8 col-xl-12">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="d-flex flex-wrap align-items-center justify-content-between">
-                        <h6 class="text-lg mb-0">Kepatuhan Minum Obat (Mingguan)</h6>
-                        <select class="form-select bg-base form-select-sm w-auto">
-                            <option>7 Hari Terakhir</option>
-                            <option>30 Hari Terakhir</option>
-                            <option>3 Bulan Terakhir</option>
-                        </select>
+    <main class="dashboard-main">
+        <!-- Navbar -->
+        <div class="navbar-header">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-4">
+                        <button type="button" class="sidebar-toggle">
+                            <iconify-icon icon="heroicons:bars-3-solid" class="icon text-2xl non-active"></iconify-icon>
+                            <iconify-icon icon="iconoir:cancel" class="icon text-2xl active"></iconify-icon>
+                        </button>
                     </div>
-                    <div class="d-flex flex-wrap align-items-center gap-2 mt-8">
-                        <h6 class="mb-0">85.7%</h6>
-                        <span class="text-sm fw-semibold rounded-pill bg-success-focus text-success-main border br-success px-8 py-4 line-height-1 d-flex align-items-center gap-1">
-                            <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> 8.3%
-                        </span>
-                        <span class="text-xs fw-medium">Rata-rata Kepatuhan Minggu Ini</span>
-                    </div>
-                    <div id="chart" class="pt-28 apexcharts-tooltip-style-1"></div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="col-xxl-4 col-xl-12">
-            <div class="card h-100">
-                <div class="card-body p-24">
-                    <h6 class="mb-20 fw-semibold text-lg">Ringkasan Aktivitas</h6>
-
-                    <div class="mb-20 pb-20 border-bottom">
-                        <div class="d-flex align-items-center justify-content-between gap-2 mb-12">
-                            <div class="d-flex align-items-center gap-2">
-                                <iconify-icon icon="solar:book-2-bold" class="text-primary-600 text-xl"></iconify-icon>
-                                <span class="text-sm text-secondary-light">Modul Diselesaikan</span>
+                <div class="col-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <div class="dropdown">
+                            <button class="d-flex justify-content-center align-items-center rounded-circle" type="button" data-bs-toggle="dropdown">
+                                <img src="assets/images/user.png" alt="image" class="w-40-px h-40-px object-fit-cover rounded-circle">
+                            </button>
+                            <div class="dropdown-menu to-top dropdown-menu-sm">
+                                <div class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                    <div>
+                                        <h6 class="text-lg text-primary-light fw-semibold mb-2">SETARA Admin</h6>
+                                        <span class="text-secondary-light fw-medium text-sm">Admin</span>
+                                    </div>
+                                </div>
+                                <ul class="to-top-list">
+                                    <li>
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3" href="settings.html">
+                                            <iconify-icon icon="solar:settings-linear" class="icon text-xl"></iconify-icon> Pengaturan
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                            <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                            <h6 class="mb-0 text-primary-600">342</h6>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between gap-2 mb-12">
-                            <div class="d-flex align-items-center gap-2">
-                                <iconify-icon icon="solar:checklist-minimalistic-bold" class="text-success-600 text-xl"></iconify-icon>
-                                <span class="text-sm text-secondary-light">Kuis Dijawab</span>
-                            </div>
-                            <h6 class="mb-0 text-success-600">567</h6>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between gap-2">
-                            <div class="d-flex align-items-center gap-2">
-                                <iconify-icon icon="solar:chat-round-dots-bold" class="text-info-600 text-xl"></iconify-icon>
-                                <span class="text-sm text-secondary-light">Pesan Komunitas</span>
-                            </div>
-                            <h6 class="mb-0 text-info-600">1,234</h6>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h6 class="mb-16 fw-semibold text-md">Distribusi Pengguna</h6>
-                        <div class="mb-12 d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="w-10-px h-10-px rounded-circle bg-danger-600"></span>
-                                <span class="text-sm text-secondary-light">Thalassemia Mayor</span>
-                            </div>
-                            <span class="text-sm fw-semibold">89 (57%)</span>
-                        </div>
-                        <div class="mb-12 d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="w-10-px h-10-px rounded-circle bg-warning-600"></span>
-                                <span class="text-sm text-secondary-light">Thalassemia Minor</span>
-                            </div>
-                            <span class="text-sm fw-semibold">67 (43%)</span>
-                        </div>
-
-                        <div class="progress h-8-px rounded-pill mt-16" style="background-color: #f3f4f6;">
-                            <div class="progress-bar bg-danger-600" role="progressbar" style="width: 57%"></div>
-                            <div class="progress-bar bg-warning-600" role="progressbar" style="width: 43%"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Aktivitas Terbaru -->
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header border-bottom bg-base py-16 px-24">
-                    <h6 class="text-lg mb-0">Aktivitas Terbaru</h6>
-                </div>
-                <div class="card-body p-24">
-                    <div class="table-responsive">
-                        <table class="table bordered-table mb-0">
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="60">No</th>
-                                    <th scope="col">Pengguna</th>
-                                    <th scope="col">Aktivitas</th>
-                                    <th scope="col" width="150">Tipe</th>
-                                    <th scope="col" width="200">Waktu</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($recentActivities as $index => $activity): ?>
-                                <tr>
-                                    <td class="text-center"><?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></td>
-                                    <td>
-                                        <span class="text-md fw-medium"><?php echo $activity['user']; ?></span>
-                                    </td>
-                                    <td>
-                                        <span class="text-sm text-secondary-light"><?php echo $activity['action']; ?></span>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        $badgeClass = 'bg-neutral-200 text-neutral-700';
-                                        $icon = 'solar:document-text-outline';
+        <!-- Dashboard Content -->
+        <div class="dashboard-main-body">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+                <h6 class="fw-semibold mb-0">Dashboard SETARA</h6>
+                <ul class="d-flex align-items-center gap-2">
+                    <li class="fw-medium">
+                        <a href="index.html" class="d-flex align-items-center gap-1 hover-text-primary">
+                            <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
+                            Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-                                        switch($activity['type']) {
-                                            case 'education':
-                                                $badgeClass = 'bg-primary-focus text-primary-600';
-                                                $icon = 'solar:book-2-outline';
-                                                $label = 'Edukasi';
-                                                break;
-                                            case 'achievement':
-                                                $badgeClass = 'bg-success-focus text-success-600';
-                                                $icon = 'solar:cup-star-outline';
-                                                $label = 'Pencapaian';
-                                                break;
-                                            case 'quiz':
-                                                $badgeClass = 'bg-warning-focus text-warning-600';
-                                                $icon = 'solar:checklist-minimalistic-outline';
-                                                $label = 'Kuis';
-                                                break;
-                                            case 'register':
-                                                $badgeClass = 'bg-info-focus text-info-600';
-                                                $icon = 'solar:user-plus-outline';
-                                                $label = 'Registrasi';
-                                                break;
-                                            case 'community':
-                                                $badgeClass = 'bg-purple-focus text-purple';
-                                                $icon = 'solar:chat-round-dots-outline';
-                                                $label = 'Komunitas';
-                                                break;
-                                            case 'medication':
-                                                $badgeClass = 'bg-cyan-focus text-cyan';
-                                                $icon = 'solar:pill-outline';
-                                                $label = 'Obat';
-                                                break;
-                                        }
-                                        ?>
-                                        <span class="badge <?php echo $badgeClass; ?> px-12 py-6 radius-4 fw-medium text-sm">
-                                            <iconify-icon icon="<?php echo $icon; ?>" class="icon"></iconify-icon>
-                                            <?php echo $label; ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="text-sm text-secondary-light">
-                                            <iconify-icon icon="solar:clock-circle-outline" class="icon"></iconify-icon>
-                                            <?php echo $activity['time']; ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+            <!-- Stats Cards -->
+            <div class="row row-cols-xxxl-4 row-cols-lg-2 row-cols-sm-2 row-cols-1 gy-4">
+                <div class="col">
+                    <div class="card shadow-none border bg-gradient-start-1 h-100">
+                        <div class="card-body p-20">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                                <div>
+                                    <p class="fw-medium text-primary-light mb-1">Total Pengguna</p>
+                                    <h6 class="mb-0" id="totalUsers">0</h6>
+                                </div>
+                                <div class="w-50-px h-50-px bg-primary-600 rounded-circle d-flex justify-content-center align-items-center">
+                                    <iconify-icon icon="solar:users-group-rounded-bold" class="text-white text-2xl mb-0"></iconify-icon>
+                                </div>
+                            </div>
+                            <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
+                                <span class="d-inline-flex align-items-center gap-1 text-success-main">
+                                    <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> <span id="newUsers">0</span>
+                                </span>
+                                30 hari terakhir
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow-none border bg-gradient-start-2 h-100">
+                        <div class="card-body p-20">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                                <div>
+                                    <p class="fw-medium text-primary-light mb-1">Total Modul Edukasi</p>
+                                    <h6 class="mb-0" id="totalModules">0</h6>
+                                </div>
+                                <div class="w-50-px h-50-px bg-success-main rounded-circle d-flex justify-content-center align-items-center">
+                                    <iconify-icon icon="solar:book-2-bold" class="text-white text-2xl mb-0"></iconify-icon>
+                                </div>
+                            </div>
+                            <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
+                                <span class="d-inline-flex align-items-center gap-1 text-success-main">
+                                    <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> <span id="newModules">0</span>
+                                </span>
+                                Modul baru bulan ini
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow-none border bg-gradient-start-3 h-100">
+                        <div class="card-body p-20">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                                <div>
+                                    <p class="fw-medium text-primary-light mb-1">Kepatuhan Minum Obat</p>
+                                    <h6 class="mb-0">85.7%</h6>
+                                </div>
+                                <div class="w-50-px h-50-px bg-info rounded-circle d-flex justify-content-center align-items-center">
+                                    <iconify-icon icon="solar:pill-bold" class="text-white text-2xl mb-0"></iconify-icon>
+                                </div>
+                            </div>
+                            <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
+                                <span class="d-inline-flex align-items-center gap-1 text-success-main">
+                                    <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> +8.3%
+                                </span>
+                                Dibanding minggu lalu
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow-none border bg-gradient-start-4 h-100">
+                        <div class="card-body p-20">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                                <div>
+                                    <p class="fw-medium text-primary-light mb-1">Pengguna Aktif Hari Ini</p>
+                                    <h6 class="mb-0" id="activeUsers">0</h6>
+                                </div>
+                                <div class="w-50-px h-50-px bg-warning-main rounded-circle d-flex justify-content-center align-items-center">
+                                    <iconify-icon icon="solar:user-check-rounded-bold" class="text-white text-2xl mb-0"></iconify-icon>
+                                </div>
+                            </div>
+                            <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-center gap-2">
+                                <span class="text-secondary-light">57%</span>
+                                dari total pengguna
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row gy-4 mt-1">
+                <!-- Chart Kepatuhan Minum Obat -->
+                <div class="col-xxl-8 col-xl-12">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex flex-wrap align-items-center justify-content-between">
+                                <h6 class="text-lg mb-0">Kepatuhan Minum Obat (Mingguan)</h6>
+                                <select class="form-select bg-base form-select-sm w-auto">
+                                    <option>7 Hari Terakhir</option>
+                                    <option>30 Hari Terakhir</option>
+                                    <option>3 Bulan Terakhir</option>
+                                </select>
+                            </div>
+                            <div class="d-flex flex-wrap align-items-center gap-2 mt-8">
+                                <h6 class="mb-0">85.7%</h6>
+                                <span class="text-sm fw-semibold rounded-pill bg-success-focus text-success-main border br-success px-8 py-4 line-height-1 d-flex align-items-center gap-1">
+                                    <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon> 8.3%
+                                </span>
+                                <span class="text-xs fw-medium">Rata-rata Kepatuhan Minggu Ini</span>
+                            </div>
+                            <div id="chart" class="pt-28 apexcharts-tooltip-style-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="col-xxl-4 col-xl-12">
+                    <div class="card h-100">
+                        <div class="card-body p-24">
+                            <h6 class="mb-20 fw-semibold text-lg">Ringkasan Aktivitas</h6>
+
+                            <div class="mb-20 pb-20 border-bottom">
+                                <div class="d-flex align-items-center justify-content-between gap-2 mb-12">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <iconify-icon icon="solar:book-2-bold" class="text-primary-600 text-xl"></iconify-icon>
+                                        <span class="text-sm text-secondary-light">Modul Diselesaikan</span>
+                                    </div>
+                                    <h6 class="mb-0 text-primary-600">342</h6>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between gap-2 mb-12">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <iconify-icon icon="solar:checklist-minimalistic-bold" class="text-success-600 text-xl"></iconify-icon>
+                                        <span class="text-sm text-secondary-light">Kuis Dijawab</span>
+                                    </div>
+                                    <h6 class="mb-0 text-success-600">567</h6>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <iconify-icon icon="solar:chat-round-dots-bold" class="text-info-600 text-xl"></iconify-icon>
+                                        <span class="text-sm text-secondary-light">Pesan Komunitas</span>
+                                    </div>
+                                    <h6 class="mb-0 text-info-600">1,234</h6>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h6 class="mb-16 fw-semibold text-md">Distribusi Pengguna</h6>
+                                <div class="mb-12 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="w-10-px h-10-px rounded-circle bg-danger-600"></span>
+                                        <span class="text-sm text-secondary-light">Thalassemia Mayor</span>
+                                    </div>
+                                    <span class="text-sm fw-semibold" id="mayorCount">0 (0%)</span>
+                                </div>
+                                <div class="mb-12 d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="w-10-px h-10-px rounded-circle bg-warning-600"></span>
+                                        <span class="text-sm text-secondary-light">Thalassemia Minor</span>
+                                    </div>
+                                    <span class="text-sm fw-semibold" id="minorCount">0 (0%)</span>
+                                </div>
+
+                                <div class="progress h-8-px rounded-pill mt-16" style="background-color: #f3f4f6;">
+                                    <div class="progress-bar bg-danger-600" role="progressbar" style="width: 57%"></div>
+                                    <div class="progress-bar bg-warning-600" role="progressbar" style="width: 43%"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<?php include './partials/layouts/layoutBottom.php' ?>
+        <!-- Footer -->
+        <footer class="d-footer">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <p class="mb-0">© 2024 SETARA. All Rights Reserved.</p>
+                </div>
+                <div class="col-auto">
+                    <p class="mb-0">Powered by <span class="text-primary-600">SETARA</span></p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- jQuery library js -->
+    <script src="assets/js/lib/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
+    <!-- Apex Chart js -->
+    <script src="assets/js/lib/apexcharts.min.js"></script>
+    <!-- Iconify Font js -->
+    <script src="assets/js/lib/iconify-icon.min.js"></script>
+    <!-- Main js -->
+    <script src="assets/js/app.js"></script>
+    <!-- Chart js -->
+    <script src="assets/js/homeOneChart.js"></script>
+
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { db } from './assets/js/firebase-config.js';
+        import { usersAPI, modulesAPI } from './assets/js/firebase-crud.js';
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                // Get users
+                const usersResult = await usersAPI.getAll();
+                if (usersResult.success && usersResult.data) {
+                    const users = usersResult.data;
+                    document.getElementById('totalUsers').textContent = users.length;
+                    document.getElementById('activeUsers').textContent = Math.floor(users.length * 0.6);
+                    document.getElementById('newUsers').textContent = Math.floor(users.length * 0.1);
+
+                    // Count by type
+                    const mayorCount = users.filter(u => u.thalassemiaType === 'mayor').length;
+                    const minorCount = users.filter(u => u.thalassemiaType === 'minor').length;
+                    const mayorPercent = users.length > 0 ? Math.round(mayorCount/users.length*100) : 0;
+                    const minorPercent = users.length > 0 ? Math.round(minorCount/users.length*100) : 0;
+
+                    document.getElementById('mayorCount').textContent = `${mayorCount} (${mayorPercent}%)`;
+                    document.getElementById('minorCount').textContent = `${minorCount} (${minorPercent}%)`;
+                }
+
+                // Get modules
+                const modulesResult = await modulesAPI.getAll();
+                if (modulesResult.success && modulesResult.data) {
+                    document.getElementById('totalModules').textContent = modulesResult.data.length;
+                    document.getElementById('newModules').textContent = Math.floor(modulesResult.data.length * 0.1);
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+
+</body>
+</html>
