@@ -55,38 +55,61 @@ SETARA (Self-Care Education for Thalassemia) Admin Panel adalah sistem manajemen
 - **Font**: Default system fonts
 - **Responsif**: Mobile-first design
 
-## 🚀 Cara Instalasi
+## 🚀 Cara Instalasi & Deployment
+
+### Live Demo
+
+**🌐 GitHub Pages**: https://momochan32.github.io/setara-admin-panel/login.html
 
 ### Prerequisites
-- PHP 7.4 atau lebih tinggi
-- Web server (Apache/Nginx)
-- Browser modern
+- GitHub account
+- Firebase project (Firestore enabled)
+- Browser modern dengan JavaScript enabled
 
-### Instalasi Lokal
+### Quick Start - GitHub Pages (Recommended)
 
-1. Clone repository ini:
+1. **Enable GitHub Pages** (sudah dilakukan):
+   - Repository: https://github.com/momochan32/setara-admin-panel
+   - Settings > Pages > Source: main branch
+   - URL: https://momochan32.github.io/setara-admin-panel/
+
+2. **Access the App**:
+   - Login: https://momochan32.github.io/setara-admin-panel/login.html
+   - Dashboard: https://momochan32.github.io/setara-admin-panel/index.html
+
+3. **Setup Firebase** (See DEPLOYMENT.md for details):
+   - Create Firestore collections
+   - Configure security rules
+   - Add sample data
+
+### Local Development
+
 ```bash
-git clone https://github.com/[your-username]/setara-admin-panel.git
+# Clone repository
+git clone https://github.com/momochan32/setara-admin-panel.git
 cd setara-admin-panel
-```
 
-2. Jalankan dengan PHP built-in server:
-```bash
+# Run local server (choose one):
+python3 -m http.server 8000
+# OR
 php -S localhost:8000
+# OR
+npx http-server -p 8000
+
+# Open browser
+open http://localhost:8000/login.html
 ```
 
-3. Buka browser dan akses:
-```
-http://localhost:8000/login.php
-```
+### Firebase Configuration
 
-4. Klik tombol "Masuk ke Dashboard" untuk mengakses admin panel
+Firebase credentials are managed via:
+1. `.env` file (local development - gitignored)
+2. `assets/js/env-config.js` (local - gitignored)
+3. Fallback config in `assets/js/firebase-config.js` (public repo)
 
-### Deploy ke Hosting
+**For production security**: Use GitHub Secrets or restrict Firebase by domain.
 
-1. Upload semua file ke direktori public_html atau www
-2. Pastikan file permissions sudah benar
-3. Akses melalui domain Anda: `https://yourdomain.com/login.php`
+📖 **Full deployment guide**: See [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## 📁 Struktur Folder
 
