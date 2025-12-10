@@ -1,152 +1,157 @@
-<?php
-// SETARA Users Data - Dummy Data for Thalassemia Patients
-$usersData = [
-    [
-        'photo' => 'user-list1.png',
-        'name' => 'Aisyah Putri',
-        'email' => 'aisyah.putri@email.com',
-        'thalassemiaType' => 'Thalassemia Mayor',
-        'currentLevel' => 'Warrior',
-        'totalPoints' => 1250,
-        'status' => 'Active',
-        'statusClass' => 'bg-success-focus text-success-600 border border-success-main',
-        'diagnosisYear' => 2018,
-        'bloodType' => 'B+',
-        'emergencyContactName' => 'Ibu Siti Aminah',
-        'emergencyContactPhone' => '+62 812-3456-7890',
-        'emergencyContactRelation' => 'Ibu Kandung'
-    ],
-    [
-        'photo' => 'user-list2.png',
-        'name' => 'Rizky Pratama',
-        'email' => 'rizky.pratama@email.com',
-        'thalassemiaType' => 'Thalassemia Minor',
-        'currentLevel' => 'Champion',
-        'totalPoints' => 2100,
-        'status' => 'Active',
-        'statusClass' => 'bg-success-focus text-success-600 border border-success-main',
-        'diagnosisYear' => 2016,
-        'bloodType' => 'O+',
-        'emergencyContactName' => 'Ayah Budi Santoso',
-        'emergencyContactPhone' => '+62 813-9876-5432',
-        'emergencyContactRelation' => 'Ayah Kandung'
-    ],
-    [
-        'photo' => 'user-list3.png',
-        'name' => 'Siti Nurhaliza',
-        'email' => 'siti.nur@email.com',
-        'thalassemiaType' => 'Thalassemia Mayor',
-        'currentLevel' => 'Hero',
-        'totalPoints' => 3500,
-        'status' => 'Active',
-        'statusClass' => 'bg-success-focus text-success-600 border border-success-main',
-        'diagnosisYear' => 2015,
-        'bloodType' => 'A+',
-        'emergencyContactName' => 'Ibu Fatimah',
-        'emergencyContactPhone' => '+62 815-1234-5678',
-        'emergencyContactRelation' => 'Ibu Kandung'
-    ],
-    [
-        'photo' => 'user-list4.png',
-        'name' => 'Budi Santoso',
-        'email' => 'budi.santoso@email.com',
-        'thalassemiaType' => 'Thalassemia Minor',
-        'currentLevel' => 'Beginner',
-        'totalPoints' => 450,
-        'status' => 'Inactive',
-        'statusClass' => 'bg-neutral-200 text-neutral-600 border border-neutral-400',
-        'diagnosisYear' => 2020,
-        'bloodType' => 'AB+',
-        'emergencyContactName' => 'Kakak Dewi Lestari',
-        'emergencyContactPhone' => '+62 817-2468-1357',
-        'emergencyContactRelation' => 'Kakak Kandung'
-    ],
-    [
-        'photo' => 'user-list5.png',
-        'name' => 'Dewi Lestari',
-        'email' => 'dewi.lestari@email.com',
-        'thalassemiaType' => 'Thalassemia Mayor',
-        'currentLevel' => 'Warrior',
-        'totalPoints' => 1680,
-        'status' => 'Active',
-        'statusClass' => 'bg-success-focus text-success-600 border border-success-main',
-        'diagnosisYear' => 2017,
-        'bloodType' => 'B-',
-        'emergencyContactName' => 'Ibu Sri Wahyuni',
-        'emergencyContactPhone' => '+62 819-8765-4321',
-        'emergencyContactRelation' => 'Ibu Kandung'
-    ],
-    [
-        'photo' => 'user-list6.png',
-        'name' => 'Ahmad Fauzi',
-        'email' => 'ahmad.fauzi@email.com',
-        'thalassemiaType' => 'Thalassemia Minor',
-        'currentLevel' => 'Champion',
-        'totalPoints' => 2450,
-        'status' => 'Active',
-        'statusClass' => 'bg-success-focus text-success-600 border border-success-main',
-        'diagnosisYear' => 2019,
-        'bloodType' => 'O-',
-        'emergencyContactName' => 'Ayah Ahmad Yusuf',
-        'emergencyContactPhone' => '+62 821-5555-6666',
-        'emergencyContactRelation' => 'Ayah Kandung'
-    ],
-    [
-        'photo' => 'user-list7.png',
-        'name' => 'Intan Permata',
-        'email' => 'intan.permata@email.com',
-        'thalassemiaType' => 'Thalassemia Mayor',
-        'currentLevel' => 'Beginner',
-        'totalPoints' => 320,
-        'status' => 'Active',
-        'statusClass' => 'bg-success-focus text-success-600 border border-success-main',
-        'diagnosisYear' => 2021,
-        'bloodType' => 'A-',
-        'emergencyContactName' => 'Ibu Rina Susanti',
-        'emergencyContactPhone' => '+62 822-7777-8888',
-        'emergencyContactRelation' => 'Ibu Kandung'
-    ],
-    [
-        'photo' => 'user-list8.png',
-        'name' => 'Hendra Wijaya',
-        'email' => 'hendra.wijaya@email.com',
-        'thalassemiaType' => 'Thalassemia Minor',
-        'currentLevel' => 'Hero',
-        'totalPoints' => 4200,
-        'status' => 'Active',
-        'statusClass' => 'bg-success-focus text-success-600 border border-success-main',
-        'diagnosisYear' => 2014,
-        'bloodType' => 'AB-',
-        'emergencyContactName' => 'Ayah Hendra Gunawan',
-        'emergencyContactPhone' => '+62 823-9999-0000',
-        'emergencyContactRelation' => 'Ayah Kandung'
-    ]
-];
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Dashboard SETARA</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="16x16">
+    <!-- remix icon font css  -->
+    <link rel="stylesheet" href="assets/css/remixicon.css">
+    <!-- BootStrap css -->
+    <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
+    <!-- Apex Chart css -->
+    <link rel="stylesheet" href="assets/css/lib/apexcharts.css">
+    <!-- Data Table css -->
+    <link rel="stylesheet" href="assets/css/lib/dataTables.min.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
 
-$script ='<script>
-                        // Remove/Ban User
-                        $(".ban-item-btn").on("click", function() {
-                            if(confirm("Apakah Anda yakin ingin mem-ban pengguna ini?")) {
-                                $(this).closest("tr").addClass("d-none");
-                                // TODO: Add Firebase logic to ban user
-                            }
-                        });
+<body>
 
-                        // View Detail Modal
-                        $(".view-detail-btn").on("click", function() {
-                            var userId = $(this).data("user-id");
-                            $("#userDetailModal" + userId).modal("show");
-                        });
-            </script>';?>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <button type="button" class="sidebar-close-btn">
+            <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
+        </button>
+        <div>
+            <a href="index.html" class="sidebar-logo">
+                <img src="assets/images/logo.png" alt="site logo" class="light-logo">
+                <img src="assets/images/logo-light.png" alt="site logo" class="dark-logo">
+                <img src="assets/images/logo-icon.png" alt="site logo" class="logo-icon">
+            </a>
+        </div>
+        <div class="sidebar-menu-area">
+            <ul class="sidebar-menu" id="sidebar-menu">
+                <li>
+                    <a href="index.html">
+                        <iconify-icon icon="ri:home-8-line" class="menu-icon"></iconify-icon>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html" class="active">
+                        <iconify-icon icon="ri:user-heart-line" class="menu-icon"></iconify-icon>
+                        <span>Pengguna</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ri:book-open-line" class="menu-icon"></iconify-icon>
+                        <span>Edukasi</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="edu-clusters.html"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Klaster</a>
+                        </li>
+                        <li>
+                            <a href="edu-modules.html"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Modul</a>
+                        </li>
+                        <li>
+                            <a href="edu-contents.html"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Sub-Modul</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="quizzes.html">
+                        <iconify-icon icon="ri:question-answer-line" class="menu-icon"></iconify-icon>
+                        <span>Kuis</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="community.html">
+                        <iconify-icon icon="ri:discuss-line" class="menu-icon"></iconify-icon>
+                        <span>Diskusi</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="broadcast.html">
+                        <iconify-icon icon="ri:notification-3-line" class="menu-icon"></iconify-icon>
+                        <span>Broadcast</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ri:settings-3-line" class="menu-icon"></iconify-icon>
+                        <span>Pengaturan</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="settings.html"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Umum</a>
+                        </li>
+                        <li>
+                            <a href="privacy-policy.html"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Kebijakan Privasi</a>
+                        </li>
+                        <li>
+                            <a href="terms-service.html"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Syarat & Ketentuan</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </aside>
 
-<?php include './partials/layouts/layoutTop.php' ?>
+    <main class="dashboard-main">
+        <!-- Navbar -->
+        <div class="navbar-header">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-4">
+                        <button type="button" class="sidebar-toggle">
+                            <iconify-icon icon="heroicons:bars-3-solid" class="icon text-2xl non-active"></iconify-icon>
+                            <iconify-icon icon="iconoir:cancel" class="icon text-2xl active"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <div class="dropdown">
+                            <button class="d-flex justify-content-center align-items-center rounded-circle" type="button" data-bs-toggle="dropdown">
+                                <img src="assets/images/user.png" alt="image" class="w-40-px h-40-px object-fit-cover rounded-circle">
+                            </button>
+                            <div class="dropdown-menu to-top dropdown-menu-sm">
+                                <div class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                    <div>
+                                        <h6 class="text-lg text-primary-light fw-semibold mb-2">SETARA Admin</h6>
+                                        <span class="text-secondary-light fw-medium text-sm">Admin</span>
+                                    </div>
+                                </div>
+                                <ul class="to-top-list">
+                                    <li>
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3" href="settings.html">
+                                            <iconify-icon icon="solar:settings-linear" class="icon text-xl"></iconify-icon> Pengaturan
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                            <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Dashboard Content -->
         <div class="dashboard-main-body">
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
                 <h6 class="fw-semibold mb-0">Manajemen Pengguna</h6>
                 <ul class="d-flex align-items-center gap-2">
                     <li class="fw-medium">
-                        <a href="index.php" class="d-flex align-items-center gap-1 hover-text-primary">
+                        <a href="index.html" class="d-flex align-items-center gap-1 hover-text-primary">
                             <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
                             Dashboard
                         </a>
@@ -185,7 +190,7 @@ $script ='<script>
                 </div>
                 <div class="card-body p-24">
                     <div class="table-responsive scroll-sm">
-                        <table class="table bordered-table sm-table mb-0">
+                        <table class="table bordered-table sm-table mb-0" id="usersTable">
                             <thead>
                                 <tr>
                                     <th scope="col">
@@ -205,157 +210,14 @@ $script ='<script>
                                     <th scope="col" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <?php foreach ($usersData as $index => $user): ?>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-10">
-                                            <div class="form-check style-check d-flex align-items-center">
-                                                <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
-                                            </div>
-                                            <?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="assets/images/user-list/<?php echo $user['photo']; ?>" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
-                                            <div class="flex-grow-1">
-                                                <span class="text-md mb-0 fw-normal text-secondary-light"><?php echo $user['name']; ?></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="text-md mb-0 fw-normal text-secondary-light"><?php echo $user['email']; ?></span></td>
-                                    <td>
-                                        <span class="<?php echo ($user['thalassemiaType'] == 'Thalassemia Mayor') ? 'text-danger-600' : 'text-warning-600'; ?> fw-medium">
-                                            <?php echo $user['thalassemiaType']; ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-primary-600 text-white px-12 py-6 radius-4 fw-medium text-sm">
-                                            <?php echo $user['currentLevel']; ?>
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="text-primary-600 fw-semibold"><?php echo number_format($user['totalPoints']); ?></span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="<?php echo $user['statusClass']; ?> px-24 py-4 radius-4 fw-medium text-sm"><?php echo $user['status']; ?></span>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex align-items-center gap-10 justify-content-center">
-                                            <button type="button" class="view-detail-btn bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle" data-user-id="<?php echo $index; ?>" data-bs-toggle="modal" data-bs-target="#userDetailModal<?php echo $index; ?>">
-                                                <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="ban-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle" title="Ban User">
-                                                <iconify-icon icon="material-symbols:block" class="menu-icon"></iconify-icon>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- User Detail Modal -->
-                                <div class="modal fade" id="userDetailModal<?php echo $index; ?>" tabindex="-1" aria-labelledby="userDetailModalLabel<?php echo $index; ?>" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="userDetailModalLabel<?php echo $index; ?>">Detail Pengguna</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="text-center mb-24">
-                                                    <img src="assets/images/user-list/<?php echo $user['photo']; ?>" alt="" class="w-120-px h-120-px rounded-circle mx-auto mb-16">
-                                                    <h6 class="mb-4"><?php echo $user['name']; ?></h6>
-                                                    <p class="text-secondary-light mb-16"><?php echo $user['email']; ?></p>
-                                                </div>
-
-                                                <div class="row g-3">
-                                                    <div class="col-md-6">
-                                                        <div class="p-16 border radius-8">
-                                                            <p class="text-secondary-light mb-4 text-sm">Tipe Thalassemia</p>
-                                                            <h6 class="mb-0 text-sm"><?php echo $user['thalassemiaType']; ?></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="p-16 border radius-8">
-                                                            <p class="text-secondary-light mb-4 text-sm">Level Saat Ini</p>
-                                                            <h6 class="mb-0 text-sm"><?php echo $user['currentLevel']; ?></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="p-16 border radius-8">
-                                                            <p class="text-secondary-light mb-4 text-sm">Total Poin</p>
-                                                            <h6 class="mb-0 text-sm text-primary-600"><?php echo number_format($user['totalPoints']); ?></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="p-16 border radius-8">
-                                                            <p class="text-secondary-light mb-4 text-sm">Tahun Diagnosis</p>
-                                                            <h6 class="mb-0 text-sm"><?php echo $user['diagnosisYear']; ?></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="p-16 border radius-8">
-                                                            <p class="text-secondary-light mb-4 text-sm">Golongan Darah</p>
-                                                            <h6 class="mb-0 text-sm"><?php echo $user['bloodType']; ?></h6>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="p-16 border radius-8">
-                                                            <p class="text-secondary-light mb-4 text-sm">Status</p>
-                                                            <span class="<?php echo $user['statusClass']; ?> px-12 py-4 radius-4 fw-medium text-xs"><?php echo $user['status']; ?></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mt-20 p-20 border radius-8 bg-warning-focus">
-                                                    <h6 class="mb-16 fw-semibold text-md d-flex align-items-center gap-2">
-                                                        <iconify-icon icon="solar:phone-calling-bold" class="text-warning-600 text-xl"></iconify-icon>
-                                                        Kontak Darurat
-                                                    </h6>
-                                                    <div class="row g-3">
-                                                        <div class="col-md-12">
-                                                            <div class="d-flex align-items-center gap-3">
-                                                                <iconify-icon icon="solar:user-bold" class="text-warning-600 text-2xl"></iconify-icon>
-                                                                <div>
-                                                                    <p class="text-xs text-secondary-light mb-4">Nama Kontak</p>
-                                                                    <h6 class="mb-0 text-sm"><?php echo $user['emergencyContactName']; ?></h6>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="d-flex align-items-center gap-3">
-                                                                <iconify-icon icon="solar:phone-bold" class="text-warning-600 text-2xl"></iconify-icon>
-                                                                <div>
-                                                                    <p class="text-xs text-secondary-light mb-4">Nomor Telepon</p>
-                                                                    <h6 class="mb-0 text-sm"><?php echo $user['emergencyContactPhone']; ?></h6>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="d-flex align-items-center gap-3">
-                                                                <iconify-icon icon="solar:users-group-rounded-bold" class="text-warning-600 text-2xl"></iconify-icon>
-                                                                <div>
-                                                                    <p class="text-xs text-secondary-light mb-4">Hubungan</p>
-                                                                    <h6 class="mb-0 text-sm"><?php echo $user['emergencyContactRelation']; ?></h6>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
+                            <tbody id="usersTableBody">
+                                <!-- Data will be loaded from Firebase -->
                             </tbody>
                         </table>
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-24">
-                        <span>Menampilkan 1 hingga <?php echo count($usersData); ?> dari <?php echo count($usersData); ?> entri</span>
+                        <span id="tableInfo">Memuat data...</span>
                         <ul class="pagination d-flex flex-wrap align-items-center gap-2 justify-content-center">
                             <li class="page-item">
                                 <a class="page-link bg-neutral-200 text-secondary-light fw-semibold radius-8 border-0 d-flex align-items-center justify-content-center h-32-px w-32-px text-md" href="javascript:void(0)">
@@ -376,4 +238,123 @@ $script ='<script>
             </div>
         </div>
 
-<?php include './partials/layouts/layoutBottom.php' ?>
+        <!-- Footer -->
+        <footer class="d-footer">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <p class="mb-0">© 2024 SETARA. All Rights Reserved.</p>
+                </div>
+                <div class="col-auto">
+                    <p class="mb-0">Powered by <span class="text-primary-600">SETARA</span></p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- jQuery library js -->
+    <script src="assets/js/lib/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
+    <!-- Apex Chart js -->
+    <script src="assets/js/lib/apexcharts.min.js"></script>
+    <!-- Iconify Font js -->
+    <script src="assets/js/lib/iconify-icon.min.js"></script>
+    <!-- Main js -->
+    <script src="assets/js/app.js"></script>
+
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { db } from './assets/js/firebase-config.js';
+        import { usersAPI } from './assets/js/firebase-crud.js';
+
+        // Load users data
+        async function loadUsers() {
+            try {
+                const result = await usersAPI.getAll();
+                if (result.success && result.data) {
+                    displayUsers(result.data);
+                } else {
+                    console.error('Error loading users:', result.error);
+                    document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="8" class="text-center">Gagal memuat data pengguna</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="8" class="text-center">Terjadi kesalahan</td></tr>';
+            }
+        }
+
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            const tableInfo = document.getElementById('tableInfo');
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">Tidak ada data</td></tr>';
+                tableInfo.textContent = 'Menampilkan 0 dari 0 entri';
+                return;
+            }
+
+            tbody.innerHTML = users.map((user, index) => `
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center gap-10">
+                            <div class="form-check style-check d-flex align-items-center">
+                                <input class="form-check-input radius-4 border border-neutral-400" type="checkbox" name="checkbox">
+                            </div>
+                            ${String(index + 1).padStart(2, '0')}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="assets/images/user-list/user-list${(index % 8) + 1}.png" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                            <div class="flex-grow-1">
+                                <span class="text-md mb-0 fw-normal text-secondary-light">${user.name || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="text-md mb-0 fw-normal text-secondary-light">${user.email || 'N/A'}</span></td>
+                    <td>
+                        <span class="${user.thalassemiaType === 'mayor' ? 'text-danger-600' : 'text-warning-600'} fw-medium">
+                            Thalassemia ${user.thalassemiaType === 'mayor' ? 'Mayor' : 'Minor'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary-600 text-white px-12 py-6 radius-4 fw-medium text-sm">
+                            ${user.currentLevel || 'Beginner'}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <span class="text-primary-600 fw-semibold">${user.totalPoints || 0}</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">Active</span>
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex align-items-center gap-10 justify-content-center">
+                            <button type="button" class="view-detail-btn bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle" data-user-id="${user.id}">
+                                <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
+                            </button>
+                            <button type="button" class="ban-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle" title="Ban User" data-user-id="${user.id}">
+                                <iconify-icon icon="material-symbols:block" class="menu-icon"></iconify-icon>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            tableInfo.textContent = `Menampilkan 1 hingga ${users.length} dari ${users.length} entri`;
+        }
+
+        // Event handlers
+        $(document).on('click', '.ban-item-btn', function() {
+            if(confirm('Apakah Anda yakin ingin mem-ban pengguna ini?')) {
+                $(this).closest('tr').addClass('d-none');
+                // TODO: Add Firebase logic to ban user
+            }
+        });
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+
+</body>
+</html>

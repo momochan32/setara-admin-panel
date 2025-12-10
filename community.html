@@ -1,114 +1,150 @@
-<?php
-// SETARA Community Discussion Messages (Static Data)
-$messagesData = [
-    [
-        'id' => 1,
-        'userId' => 'user001',
-        'userName' => 'Aisyah Putri',
-        'userPhoto' => 'user-list1.png',
-        'message' => 'Halo teman-teman! Bagaimana kabar kalian hari ini? Saya baru saja selesai transfusi darah pagi ini.',
-        'timestamp' => '10:30 AM',
-        'date' => '2024-12-09',
-        'isDeleted' => false
-    ],
-    [
-        'id' => 2,
-        'userId' => 'user002',
-        'userName' => 'Rizky Pratama',
-        'userPhoto' => 'user-list2.png',
-        'message' => 'Alhamdulillah baik kak! Semangat ya untuk recovery-nya. Jangan lupa minum obat kelasi besi tepat waktu 💪',
-        'timestamp' => '10:45 AM',
-        'date' => '2024-12-09',
-        'isDeleted' => false
-    ],
-    [
-        'id' => 3,
-        'userId' => 'user003',
-        'userName' => 'Siti Nurhaliza',
-        'userPhoto' => 'user-list3.png',
-        'message' => 'Hai semuanya! Ada yang punya tips untuk mengatasi rasa lelah setelah transfusi?',
-        'timestamp' => '11:15 AM',
-        'date' => '2024-12-09',
-        'isDeleted' => false
-    ],
-    [
-        'id' => 4,
-        'userId' => 'user004',
-        'userName' => 'Budi Santoso',
-        'userPhoto' => 'user-list4.png',
-        'message' => 'Coba istirahat yang cukup dan minum air putih yang banyak kak. Itu yang biasa saya lakukan dan membantu.',
-        'timestamp' => '11:30 AM',
-        'date' => '2024-12-09',
-        'isDeleted' => false
-    ],
-    [
-        'id' => 5,
-        'userId' => 'user005',
-        'userName' => 'Dewi Lestari',
-        'userPhoto' => 'user-list5.png',
-        'message' => 'Betul! Dan jangan lupa konsumsi makanan bergizi tinggi seperti yang sudah kita pelajari di modul nutrisi 🥗',
-        'timestamp' => '12:00 PM',
-        'date' => '2024-12-09',
-        'isDeleted' => false
-    ],
-    [
-        'id' => 6,
-        'userId' => 'user006',
-        'userName' => 'Ahmad Fauzi',
-        'userPhoto' => 'user-list6.png',
-        'message' => 'Saya kemarin habis nonton video tentang aktivitas fisik yang aman. Ternyata jalan santai di pagi hari bagus juga!',
-        'timestamp' => '01:20 PM',
-        'date' => '2024-12-09',
-        'isDeleted' => false
-    ],
-    [
-        'id' => 7,
-        'userId' => 'user007',
-        'userName' => 'Intan Permata',
-        'userPhoto' => 'user-list7.png',
-        'message' => 'Iya nih, saya juga mulai rutin jalan pagi sekarang. Rasanya lebih segar dan semangat!',
-        'timestamp' => '01:45 PM',
-        'date' => '2024-12-09',
-        'isDeleted' => false
-    ],
-    [
-        'id' => 8,
-        'userId' => 'user008',
-        'userName' => 'Hendra Wijaya',
-        'userPhoto' => 'user-list8.png',
-        'message' => 'Terima kasih untuk semua dukungannya teman-teman. Komunitas ini sangat membantu saya! ❤️',
-        'timestamp' => '02:30 PM',
-        'date' => '2024-12-09',
-        'isDeleted' => false
-    ]
-];
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Diskusi - SETARA Admin Panel</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="16x16">
+    <link rel="stylesheet" href="assets/css/remixicon.css">
+    <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/lib/apexcharts.css">
+    <link rel="stylesheet" href="assets/css/lib/dataTables.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
 
-$script = '<script>
-    // Delete Message (Soft Delete)
-    $(".delete-message-btn").on("click", function() {
-        if(confirm("Apakah Anda yakin ingin menghapus pesan ini?")) {
-            var messageItem = $(this).closest(".chat-message-item");
-            messageItem.fadeOut(300, function() {
-                messageItem.remove();
-            });
-            // TODO: Add Firebase logic to set isDeletedByAdmin = true
-        }
-    });
+<body>
 
-    // Auto-scroll to bottom
-    $(".chat-message-list").scrollTop($(".chat-message-list")[0].scrollHeight);
-</script>';
-?>
+    <aside class="sidebar">
+        <button type="button" class="sidebar-close-btn">
+            <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
+        </button>
+        <div>
+            <a href="index.html" class="sidebar-logo">
+                <img src="assets/images/logo.png" alt="site logo" class="light-logo">
+                <img src="assets/images/logo-light.png" alt="site logo" class="dark-logo">
+                <img src="assets/images/logo-icon.png" alt="site logo" class="logo-icon">
+            </a>
+        </div>
+        <div class="sidebar-menu-area">
+            <ul class="sidebar-menu" id="sidebar-menu">
+                <li>
+                    <a href="index.html">
+                        <iconify-icon icon="ri:home-8-line" class="menu-icon"></iconify-icon>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <iconify-icon icon="ri:user-heart-line" class="menu-icon"></iconify-icon>
+                        <span>Pengguna</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ri:book-open-line" class="menu-icon"></iconify-icon>
+                        <span>Edukasi</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="edu-clusters.html"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Klaster</a>
+                        </li>
+                        <li>
+                            <a href="edu-modules.html"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Modul</a>
+                        </li>
+                        <li>
+                            <a href="edu-contents.html"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Sub-Modul</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="quizzes.html">
+                        <iconify-icon icon="ri:question-answer-line" class="menu-icon"></iconify-icon>
+                        <span>Kuis</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="community.html" class="active">
+                        <iconify-icon icon="ri:discuss-line" class="menu-icon"></iconify-icon>
+                        <span>Diskusi</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="broadcast.html">
+                        <iconify-icon icon="ri:notification-3-line" class="menu-icon"></iconify-icon>
+                        <span>Broadcast</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ri:settings-3-line" class="menu-icon"></iconify-icon>
+                        <span>Pengaturan</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="settings.html"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Umum</a>
+                        </li>
+                        <li>
+                            <a href="privacy-policy.html"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Kebijakan Privasi</a>
+                        </li>
+                        <li>
+                            <a href="terms-service.html"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Syarat & Ketentuan</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </aside>
 
-<?php include './partials/layouts/layoutTop.php' ?>
+    <main class="dashboard-main">
+        <div class="navbar-header">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-4">
+                        <button type="button" class="sidebar-toggle">
+                            <iconify-icon icon="heroicons:bars-3-solid" class="icon text-2xl non-active"></iconify-icon>
+                            <iconify-icon icon="iconoir:cancel" class="icon text-2xl active"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <div class="dropdown">
+                            <button class="d-flex justify-content-center align-items-center rounded-circle" type="button" data-bs-toggle="dropdown">
+                                <img src="assets/images/user.png" alt="image" class="w-40-px h-40-px object-fit-cover rounded-circle">
+                            </button>
+                            <div class="dropdown-menu to-top dropdown-menu-sm">
+                                <div class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                    <div>
+                                        <h6 class="text-lg text-primary-light fw-semibold mb-2">SETARA Admin</h6>
+                                        <span class="text-secondary-light fw-medium text-sm">Admin</span>
+                                    </div>
+                                </div>
+                                <ul class="to-top-list">
+                                    <li>
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3" href="settings.html">
+                                            <iconify-icon icon="solar:settings-linear" class="icon text-xl"></iconify-icon> Pengaturan
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                            <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div class="dashboard-main-body">
+        <div class="dashboard-main-body">
 
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
         <h6 class="fw-semibold mb-0">Diskusi Komunitas</h6>
         <ul class="d-flex align-items-center gap-2">
             <li class="fw-medium">
-                <a href="index.php" class="d-flex align-items-center gap-1 hover-text-primary">
+                <a href="index.html" class="d-flex align-items-center gap-1 hover-text-primary">
                     <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
                     Dashboard
                 </a>
@@ -125,7 +161,7 @@ $script = '<script>
                 <div class="d-flex align-items-center gap-2">
                     <span class="badge bg-success-focus text-success-600 px-16 py-8 radius-8 fw-medium">
                         <iconify-icon icon="solar:users-group-rounded-bold" class="icon text-md"></iconify-icon>
-                        <?php echo count($messagesData); ?> Pesan
+                         Pesan
                     </span>
                 </div>
             </div>
@@ -142,27 +178,27 @@ $script = '<script>
 
             <!-- Chat Messages Container -->
             <div class="chat-message-list" style="max-height: 600px; overflow-y: auto; padding: 16px; background: #f5f6fa; border-radius: 12px;">
-                <?php foreach ($messagesData as $message): ?>
-                <div class="chat-message-item mb-24 position-relative" data-message-id="<?php echo $message['id']; ?>">
+                
+                <div class="chat-message-item mb-24 position-relative" data-message-id="">
                     <div class="d-flex align-items-start gap-3">
-                        <img src="assets/images/user-list/<?php echo $message['userPhoto']; ?>" alt="" class="w-48-px h-48-px rounded-circle flex-shrink-0">
+                        <img src="assets/images/user-list/" alt="" class="w-48-px h-48-px rounded-circle flex-shrink-0">
                         <div class="flex-grow-1">
                             <div class="d-flex align-items-center justify-content-between mb-8">
                                 <div>
-                                    <h6 class="text-md mb-0 fw-semibold"><?php echo $message['userName']; ?></h6>
-                                    <span class="text-xs text-secondary-light"><?php echo $message['timestamp']; ?></span>
+                                    <h6 class="text-md mb-0 fw-semibold"></h6>
+                                    <span class="text-xs text-secondary-light"></span>
                                 </div>
                                 <button type="button" class="delete-message-btn btn btn-sm btn-outline-danger-600 px-12 py-6 radius-8" title="Hapus Pesan">
                                     <iconify-icon icon="fluent:delete-24-regular" class="icon"></iconify-icon>
                                 </button>
                             </div>
                             <div class="bg-white p-16 radius-12 border">
-                                <p class="text-sm text-secondary-light mb-0 line-height-1-6"><?php echo $message['message']; ?></p>
+                                <p class="text-sm text-secondary-light mb-0 line-height-1-6"></p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php endforeach; ?>
+                
             </div>
 
             <!-- Statistics -->
@@ -173,7 +209,7 @@ $script = '<script>
                             <iconify-icon icon="solar:chat-round-dots-bold" class="text-primary-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Total Pesan</span>
                         </div>
-                        <h4 class="mb-0 text-primary-600"><?php echo count($messagesData); ?></h4>
+                        <h4 class="mb-0 text-primary-600"></h4>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -225,4 +261,42 @@ $script = '<script>
     </div>
 </div>
 
-<?php include './partials/layouts/layoutBottom.php' ?>
+        <footer class="d-footer">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <p class="mb-0">© 2024 SETARA. All Rights Reserved.</p>
+                </div>
+                <div class="col-auto">
+                    <p class="mb-0">Powered by <span class="text-primary-600">SETARA</span></p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="assets/js/lib/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/lib/apexcharts.min.js"></script>
+    <script src="assets/js/lib/dataTables.min.js"></script>
+    <script src="assets/js/lib/iconify-icon.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <script>
+
+    // Delete Message (Soft Delete)
+    $(".delete-message-btn").on("click", function() {
+        if(confirm("Apakah Anda yakin ingin menghapus pesan ini?")) {
+            var messageItem = $(this).closest(".chat-message-item");
+            messageItem.fadeOut(300, function() {
+                messageItem.remove();
+            });
+            // TODO: Add Firebase logic to set isDeletedByAdmin = true
+        }
+    });
+
+    // Auto-scroll to bottom
+    $(".chat-message-list").scrollTop($(".chat-message-list")[0].scrollHeight);
+
+    </script>
+
+</body>
+</html>

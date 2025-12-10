@@ -1,79 +1,149 @@
-<?php
-// SETARA Broadcast History Data
-$broadcastHistory = [
-    [
-        'id' => 1,
-        'title' => 'Jadwal Transfusi Rutin',
-        'body' => 'Pengingat untuk jadwal transfusi darah minggu ini. Jangan lupa untuk datang tepat waktu!',
-        'targetAudience' => 'All Users',
-        'sentDate' => '2024-12-08 10:00',
-        'recipientCount' => 156
-    ],
-    [
-        'id' => 2,
-        'title' => 'Modul Baru: Nutrisi Sehat',
-        'body' => 'Modul edukasi baru tentang nutrisi sehat telah tersedia. Yuk pelajari sekarang!',
-        'targetAudience' => 'All Users',
-        'sentDate' => '2024-12-07 15:30',
-        'recipientCount' => 156
-    ],
-    [
-        'id' => 3,
-        'title' => 'Selamat! Level Warrior',
-        'body' => 'Selamat kepada pengguna yang telah mencapai level Warrior. Terus semangat!',
-        'targetAudience' => 'Warrior',
-        'sentDate' => '2024-12-06 09:00',
-        'recipientCount' => 42
-    ],
-    [
-        'id' => 4,
-        'title' => 'Tips Mengatasi Kelelahan',
-        'body' => 'Pelajari tips dan trik untuk mengatasi kelelahan setelah transfusi darah.',
-        'targetAudience' => 'All Users',
-        'sentDate' => '2024-12-05 14:00',
-        'recipientCount' => 156
-    ]
-];
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broadcast - SETARA Admin Panel</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="16x16">
+    <link rel="stylesheet" href="assets/css/remixicon.css">
+    <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/lib/apexcharts.css">
+    <link rel="stylesheet" href="assets/css/lib/dataTables.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
 
-$script = '<script>
-    // Send Broadcast
-    $("#sendBroadcastBtn").on("click", function(e) {
-        e.preventDefault();
+<body>
 
-        var title = $("#broadcastTitle").val();
-        var body = $("#broadcastBody").val();
-        var target = $("#targetAudience").val();
+    <aside class="sidebar">
+        <button type="button" class="sidebar-close-btn">
+            <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
+        </button>
+        <div>
+            <a href="index.html" class="sidebar-logo">
+                <img src="assets/images/logo.png" alt="site logo" class="light-logo">
+                <img src="assets/images/logo-light.png" alt="site logo" class="dark-logo">
+                <img src="assets/images/logo-icon.png" alt="site logo" class="logo-icon">
+            </a>
+        </div>
+        <div class="sidebar-menu-area">
+            <ul class="sidebar-menu" id="sidebar-menu">
+                <li>
+                    <a href="index.html">
+                        <iconify-icon icon="ri:home-8-line" class="menu-icon"></iconify-icon>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="users.html">
+                        <iconify-icon icon="ri:user-heart-line" class="menu-icon"></iconify-icon>
+                        <span>Pengguna</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ri:book-open-line" class="menu-icon"></iconify-icon>
+                        <span>Edukasi</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="edu-clusters.html"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Klaster</a>
+                        </li>
+                        <li>
+                            <a href="edu-modules.html"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Modul</a>
+                        </li>
+                        <li>
+                            <a href="edu-contents.html"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Sub-Modul</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="quizzes.html">
+                        <iconify-icon icon="ri:question-answer-line" class="menu-icon"></iconify-icon>
+                        <span>Kuis</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="community.html">
+                        <iconify-icon icon="ri:discuss-line" class="menu-icon"></iconify-icon>
+                        <span>Diskusi</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="broadcast.html" class="active">
+                        <iconify-icon icon="ri:notification-3-line" class="menu-icon"></iconify-icon>
+                        <span>Broadcast</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)">
+                        <iconify-icon icon="ri:settings-3-line" class="menu-icon"></iconify-icon>
+                        <span>Pengaturan</span>
+                    </a>
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="settings.html"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Umum</a>
+                        </li>
+                        <li>
+                            <a href="privacy-policy.html"><i class="ri-circle-fill circle-icon text-warning-main w-auto"></i> Kebijakan Privasi</a>
+                        </li>
+                        <li>
+                            <a href="terms-service.html"><i class="ri-circle-fill circle-icon text-info-main w-auto"></i> Syarat & Ketentuan</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </aside>
 
-        if(!title || !body || !target) {
-            alert("Mohon lengkapi semua field!");
-            return;
-        }
+    <main class="dashboard-main">
+        <div class="navbar-header">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-4">
+                        <button type="button" class="sidebar-toggle">
+                            <iconify-icon icon="heroicons:bars-3-solid" class="icon text-2xl non-active"></iconify-icon>
+                            <iconify-icon icon="iconoir:cancel" class="icon text-2xl active"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <div class="dropdown">
+                            <button class="d-flex justify-content-center align-items-center rounded-circle" type="button" data-bs-toggle="dropdown">
+                                <img src="assets/images/user.png" alt="image" class="w-40-px h-40-px object-fit-cover rounded-circle">
+                            </button>
+                            <div class="dropdown-menu to-top dropdown-menu-sm">
+                                <div class="py-12 px-16 radius-8 bg-primary-50 mb-16 d-flex align-items-center justify-content-between gap-2">
+                                    <div>
+                                        <h6 class="text-lg text-primary-light fw-semibold mb-2">SETARA Admin</h6>
+                                        <span class="text-secondary-light fw-medium text-sm">Admin</span>
+                                    </div>
+                                </div>
+                                <ul class="to-top-list">
+                                    <li>
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-primary d-flex align-items-center gap-3" href="settings.html">
+                                            <iconify-icon icon="solar:settings-linear" class="icon text-xl"></iconify-icon> Pengaturan
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                            <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        if(confirm("Apakah Anda yakin ingin mengirim notifikasi ini?")) {
-            alert("Notifikasi berhasil dikirim! (Demo Mode - Integrasi Firebase akan ditambahkan)");
-            // TODO: Add Firebase Cloud Messaging logic
-            $("#broadcastTitle").val("");
-            $("#broadcastBody").val("");
-            $("#targetAudience").val("");
-        }
-    });
-
-    // Character counter for body
-    $("#broadcastBody").on("input", function() {
-        var length = $(this).val().length;
-        $("#charCount").text(length + " / 500 karakter");
-    });
-</script>';
-?>
-
-<?php include './partials/layouts/layoutTop.php' ?>
-
-<div class="dashboard-main-body">
+        <div class="dashboard-main-body">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
         <h6 class="fw-semibold mb-0">Broadcast Notifikasi</h6>
         <ul class="d-flex align-items-center gap-2">
             <li class="fw-medium">
-                <a href="index.php" class="d-flex align-items-center gap-1 hover-text-primary">
+                <a href="index.html" class="d-flex align-items-center gap-1 hover-text-primary">
                     <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
                     Dashboard
                 </a>
@@ -176,7 +246,7 @@ $script = '<script>
                             <iconify-icon icon="solar:notification-unread-bold" class="text-success-600 text-xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Notifikasi Terkirim</span>
                         </div>
-                        <h4 class="mb-0 text-success-600"><?php echo count($broadcastHistory); ?></h4>
+                        <h4 class="mb-0 text-success-600"></h4>
                     </div>
 
                     <div>
@@ -249,28 +319,28 @@ $script = '<script>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($broadcastHistory as $index => $broadcast): ?>
+                        
                         <tr>
-                            <td class="text-center"><?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></td>
+                            <td class="text-center"></td>
                             <td>
-                                <h6 class="text-sm mb-0 fw-semibold"><?php echo $broadcast['title']; ?></h6>
+                                <h6 class="text-sm mb-0 fw-semibold"></h6>
                             </td>
                             <td>
-                                <p class="text-sm text-secondary-light mb-0"><?php echo substr($broadcast['body'], 0, 60); ?>...</p>
+                                <p class="text-sm text-secondary-light mb-0">...</p>
                             </td>
                             <td>
                                 <span class="badge bg-primary-focus text-primary-600 px-12 py-6 radius-4 text-xs fw-medium">
-                                    <?php echo $broadcast['targetAudience']; ?>
+                                    
                                 </span>
                             </td>
                             <td class="text-center">
-                                <span class="text-primary-600 fw-semibold"><?php echo $broadcast['recipientCount']; ?></span>
+                                <span class="text-primary-600 fw-semibold"></span>
                             </td>
                             <td>
-                                <span class="text-sm text-secondary-light"><?php echo $broadcast['sentDate']; ?></span>
+                                <span class="text-sm text-secondary-light"></span>
                             </td>
                         </tr>
-                        <?php endforeach; ?>
+                        
                     </tbody>
                 </table>
             </div>
@@ -278,4 +348,56 @@ $script = '<script>
     </div>
 </div>
 
-<?php include './partials/layouts/layoutBottom.php' ?>
+        <footer class="d-footer">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <p class="mb-0">© 2024 SETARA. All Rights Reserved.</p>
+                </div>
+                <div class="col-auto">
+                    <p class="mb-0">Powered by <span class="text-primary-600">SETARA</span></p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="assets/js/lib/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/lib/apexcharts.min.js"></script>
+    <script src="assets/js/lib/dataTables.min.js"></script>
+    <script src="assets/js/lib/iconify-icon.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <script>
+
+    // Send Broadcast
+    $("#sendBroadcastBtn").on("click", function(e) {
+        e.preventDefault();
+
+        var title = $("#broadcastTitle").val();
+        var body = $("#broadcastBody").val();
+        var target = $("#targetAudience").val();
+
+        if(!title || !body || !target) {
+            alert("Mohon lengkapi semua field!");
+            return;
+        }
+
+        if(confirm("Apakah Anda yakin ingin mengirim notifikasi ini?")) {
+            alert("Notifikasi berhasil dikirim! (Demo Mode - Integrasi Firebase akan ditambahkan)");
+            // TODO: Add Firebase Cloud Messaging logic
+            $("#broadcastTitle").val("");
+            $("#broadcastBody").val("");
+            $("#targetAudience").val("");
+        }
+    });
+
+    // Character counter for body
+    $("#broadcastBody").on("input", function() {
+        var length = $(this).val().length;
+        $("#charCount").text(length + " / 500 karakter");
+    });
+
+    </script>
+
+</body>
+</html>
