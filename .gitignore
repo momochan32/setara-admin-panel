@@ -23,9 +23,12 @@ Desktop.ini
 *.tmp
 *.temp
 
-# Environment variables (if added in future)
+# Environment variables - NEVER commit these!
 .env
 .env.local
+.env.production
+.env.development
+assets/js/env-config.js
 
 # Node modules (if added in future)
 node_modules/
