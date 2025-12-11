@@ -133,7 +133,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="#" id="logoutBtn">
                                             <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
                                         </a>
                                     </li>
@@ -205,6 +205,62 @@
         </footer>
     </main>
 
+    <!-- Modal Add/Edit Cluster -->
+    <div class="modal fade" id="clusterModal" tabindex="-1" aria-labelledby="clusterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clusterModalLabel">Tambah Klaster</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="clusterForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="clusterId">
+
+                        <div class="mb-20">
+                            <label for="title" class="form-label fw-semibold text-neutral-900">Judul Klaster <span class="text-danger-600">*</span></label>
+                            <input type="text" class="form-control radius-8" id="title" placeholder="contoh: Nutrisi" required>
+                        </div>
+
+                        <div class="mb-20">
+                            <label for="description" class="form-label fw-semibold text-neutral-900">Deskripsi <span class="text-danger-600">*</span></label>
+                            <textarea class="form-control radius-8" id="description" rows="3" placeholder="Deskripsi singkat tentang klaster ini..." required></textarea>
+                        </div>
+
+                        <div class="mb-20">
+                            <label for="iconURL" class="form-label fw-semibold text-neutral-900">Icon Class <span class="text-danger-600">*</span></label>
+                            <input type="text" class="form-control radius-8" id="iconURL" placeholder="contoh: ri-restaurant-line" required>
+                            <small class="text-secondary-light">Gunakan RemixIcon class. Lihat: <a href="https://remixicon.com/" target="_blank">remixicon.com</a></small>
+                        </div>
+
+                        <div class="mb-20">
+                            <label for="colorHex" class="form-label fw-semibold text-neutral-900">Warna (Hex) <span class="text-danger-600">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text">#</span>
+                                <input type="text" class="form-control" id="colorHex" placeholder="10B981" pattern="[0-9A-Fa-f]{6}" maxlength="6" required>
+                                <input type="color" class="form-control form-control-color" id="colorPicker" title="Pilih warna">
+                            </div>
+                            <small class="text-secondary-light">Contoh: 10B981 (hijau), EF4444 (merah), 3B82F6 (biru)</small>
+                        </div>
+
+                        <div class="mb-20">
+                            <label for="order" class="form-label fw-semibold text-neutral-900">Urutan <span class="text-danger-600">*</span></label>
+                            <input type="number" class="form-control radius-8" id="order" placeholder="1" min="1" required>
+                            <small class="text-secondary-light">Urutan tampilan klaster (1 = paling atas)</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary-600 radius-8" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary-600 radius-8" id="saveClusterBtn">
+                            <iconify-icon icon="solar:diskette-bold" class="icon me-4"></iconify-icon>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- jQuery library js -->
     <script src="assets/js/lib/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap js -->
@@ -213,42 +269,85 @@
     <script src="assets/js/lib/apexcharts.min.js"></script>
     <!-- Iconify Font js -->
     <script src="assets/js/lib/iconify-icon.min.js"></script>
+
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <!-- Auth Guard & Handler -->
+    <script src="assets/js/auth-guard.js"></script>
+    <script src="assets/js/auth-handler.js"></script>
+
     <!-- Main js -->
     <script src="assets/js/app.js"></script>
 
     <script>
-        // Placeholder for cluster management
-        $("#addClusterBtn").on("click", function() {
-            alert("Tambah Klaster - Fitur ini akan diintegrasikan dengan Firebase");
+        // Use global Firebase objects
+        const db = window.firebaseDb;
+
+        const clusterModal = new bootstrap.Modal(document.getElementById('clusterModal'));
+        let currentEditId = null;
+
+        // Color picker sync
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            document.getElementById('colorHex').value = e.target.value.substring(1).toUpperCase();
         });
 
-        $(".edit-cluster-btn").on("click", function() {
-            var clusterId = $(this).data("cluster-id");
-            alert("Edit Klaster ID: " + clusterId);
-        });
-
-        $(".delete-cluster-btn").on("click", function() {
-            if(confirm("Apakah Anda yakin ingin menghapus klaster ini?")) {
-                $(this).closest(".cluster-card-item").fadeOut();
+        document.getElementById('colorHex').addEventListener('input', (e) => {
+            const hex = e.target.value.replace(/[^0-9A-Fa-f]/g, '').substring(0, 6);
+            e.target.value = hex.toUpperCase();
+            if (hex.length === 6) {
+                document.getElementById('colorPicker').value = '#' + hex;
             }
         });
 
-        // Display static data for now
-        const staticClusters = [
-            { id: 1, icon: 'ri-restaurant-line', iconColor: 'text-success-600', bgColor: 'bg-success-focus', title: 'Nutrisi', description: 'Panduan lengkap tentang nutrisi yang tepat untuk penderita Thalassemia', order: 1, moduleCount: 8 },
-            { id: 2, icon: 'ri-medicine-bottle-line', iconColor: 'text-danger-600', bgColor: 'bg-danger-focus', title: 'Obat-obatan', description: 'Informasi lengkap tentang jenis obat, cara konsumsi, dan pentingnya kepatuhan', order: 2, moduleCount: 6 },
-            { id: 3, icon: 'ri-heart-pulse-line', iconColor: 'text-primary-600', bgColor: 'bg-primary-focus', title: 'Aktivitas Fisik', description: 'Panduan olahraga dan aktivitas fisik yang aman untuk penderita Thalassemia', order: 3, moduleCount: 5 }
-        ];
+        // Load clusters from Firebase
+        async function loadClusters() {
+            const container = $('#clustersContainer');
+            try {
+                container.html('<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+                const querySnapshot = await db.collection('eduClusters').orderBy('order', 'asc').get();
+
+                const clusters = [];
+                for (const docSnap of querySnapshot.docs) {
+                    const clusterData = { id: docSnap.id, ...docSnap.data() };
+
+                    // Get module count
+                    const moduleSnapshot = await db.collection('eduModules').where('clusterId', '==', docSnap.id).get();
+                    clusterData.moduleCount = moduleSnapshot.size;
+
+                    clusters.push(clusterData);
+                }
+
+                displayClusters(clusters);
+            } catch (error) {
+                console.error('Error loading clusters:', error);
+                container.html('<div class="col-12"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></div>');
+            }
+        }
 
         function displayClusters(clusters) {
             const container = $('#clustersContainer');
-            container.html(clusters.map(cluster => `
+            if (clusters.length === 0) {
+                container.html('<div class="col-12 text-center py-32"><p class="text-secondary-light">Belum ada klaster. Klik tombol "Tambah Klaster" untuk mulai.</p></div>');
+                return;
+            }
+
+            container.html(clusters.map(cluster => {
+                const bgColor = cluster.colorHex ? `${cluster.colorHex}20` : '#f0f0f020'; // 20% opacity
+                return `
                 <div class="col-xxl-3 col-xl-4 col-md-6 col-sm-6 cluster-card-item">
                     <div class="card shadow-sm border-0 h-100 radius-12 transition-2 hover-shadow-lg">
                         <div class="card-body p-20">
                             <div class="d-flex align-items-center justify-content-between mb-20">
-                                <div class="w-56-px h-56-px ${cluster.bgColor} rounded-circle d-flex justify-content-center align-items-center flex-shrink-0">
-                                    <i class="${cluster.icon} ${cluster.iconColor} text-2xl"></i>
+                                <div class="w-56-px h-56-px rounded-circle d-flex justify-content-center align-items-center flex-shrink-0" style="background-color: ${bgColor}">
+                                    <i class="${cluster.iconURL} text-2xl" style="color: ${cluster.colorHex}"></i>
                                 </div>
                                 <span class="badge bg-neutral-200 text-neutral-700 px-12 py-6 text-xs fw-semibold radius-8">
                                     #${cluster.order}
@@ -261,7 +360,7 @@
                             <div class="d-flex align-items-center justify-content-between pt-16 border-top mb-16">
                                 <div class="d-flex align-items-center gap-2">
                                     <iconify-icon icon="solar:document-text-bold" class="text-primary-600 text-lg"></iconify-icon>
-                                    <span class="text-sm text-secondary-light fw-medium">${cluster.moduleCount} Modul</span>
+                                    <span class="text-sm text-secondary-light fw-medium">${cluster.moduleCount || 0} Modul</span>
                                 </div>
                             </div>
 
@@ -270,22 +369,104 @@
                                     <iconify-icon icon="solar:eye-outline" class="icon text-lg"></iconify-icon>
                                     Lihat Modul
                                 </a>
-                                <button type="button" class="edit-cluster-btn btn btn-outline-success-600 radius-8 px-12 py-8 text-sm" data-cluster-id="${cluster.id}" title="Edit">
+                                <button type="button" class="edit-cluster-btn btn btn-outline-success-600 radius-8 px-12 py-8 text-sm" data-cluster='${JSON.stringify(cluster)}' title="Edit">
                                     <iconify-icon icon="lucide:edit" class="icon text-lg"></iconify-icon>
                                 </button>
-                                <button type="button" class="delete-cluster-btn btn btn-outline-danger-600 radius-8 px-12 py-8 text-sm" title="Hapus">
+                                <button type="button" class="delete-cluster-btn btn btn-outline-danger-600 radius-8 px-12 py-8 text-sm" data-cluster-id="${cluster.id}" data-title="${cluster.title}" title="Hapus">
                                     <iconify-icon icon="fluent:delete-24-regular" class="icon text-lg"></iconify-icon>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            `).join(''));
+                `;
+            }).join(''));
         }
 
-        $(document).ready(function() {
-            displayClusters(staticClusters);
+        // Add Cluster Button
+        document.getElementById('addClusterBtn').addEventListener('click', () => {
+            currentEditId = null;
+            document.getElementById('clusterModalLabel').textContent = 'Tambah Klaster';
+            document.getElementById('clusterForm').reset();
+            document.getElementById('clusterId').value = '';
+            clusterModal.show();
         });
+
+        // Edit Cluster Button
+        $(document).on('click', '.edit-cluster-btn', function() {
+            const cluster = JSON.parse($(this).attr('data-cluster'));
+            currentEditId = cluster.id;
+
+            document.getElementById('clusterModalLabel').textContent = 'Edit Klaster';
+            document.getElementById('clusterId').value = cluster.id;
+            document.getElementById('title').value = cluster.title;
+            document.getElementById('description').value = cluster.description;
+            document.getElementById('iconURL').value = cluster.iconURL;
+            document.getElementById('colorHex').value = cluster.colorHex.replace('#', '');
+            document.getElementById('colorPicker').value = cluster.colorHex;
+            document.getElementById('order').value = cluster.order;
+
+            clusterModal.show();
+        });
+
+        // Delete Cluster Button
+        $(document).on('click', '.delete-cluster-btn', async function() {
+            const clusterId = $(this).data('cluster-id');
+            const title = $(this).data('title');
+
+            if (confirm(`Apakah Anda yakin ingin menghapus klaster "${title}"?\n\nPeringatan: Semua modul di dalam klaster ini juga akan terhapus!`)) {
+                try {
+                    await db.collection('eduClusters').doc(clusterId).delete();
+                    alert('Klaster berhasil dihapus!');
+                    loadClusters();
+                } catch (error) {
+                    console.error('Error deleting cluster:', error);
+                    alert('Gagal menghapus klaster: ' + error.message);
+                }
+            }
+        });
+
+        // Form Submit
+        document.getElementById('clusterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const saveBtn = document.getElementById('saveClusterBtn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+
+            const data = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                iconURL: document.getElementById('iconURL').value,
+                colorHex: '#' + document.getElementById('colorHex').value.replace('#', ''),
+                order: parseInt(document.getElementById('order').value)
+            };
+
+            try {
+                if (currentEditId) {
+                    // Update existing cluster
+                    await db.collection('eduClusters').doc(currentEditId).update(data);
+                    alert('Klaster berhasil diupdate!');
+                } else {
+                    // Add new cluster
+                    await db.collection('eduClusters').add(data);
+                    alert('Klaster berhasil ditambahkan!');
+                }
+
+                clusterModal.hide();
+                loadClusters();
+            } catch (error) {
+                console.error('Error saving cluster:', error);
+                alert('Gagal menyimpan klaster: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+            }
+        });
+
+        // Load clusters on page load
+        document.addEventListener('DOMContentLoaded', loadClusters);
     </script>
 
 </body>

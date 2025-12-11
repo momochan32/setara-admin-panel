@@ -24,7 +24,18 @@
     <!-- audioplayer -->
     <script src="assets/js/lib/audioplayer.js"></script>
 
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <!-- Auth Guard & Handler -->
+    <script src="assets/js/auth-guard.js"></script>
+    <script src="assets/js/auth-handler.js"></script>
+
     <!-- main js -->
     <script src="assets/js/app.js"></script>
-
-    <?php echo (isset($script) ? $script   : '')?>

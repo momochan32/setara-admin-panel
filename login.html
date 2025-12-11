@@ -1,8 +1,16 @@
-<!-- meta tags and other links -->
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
-
-<?php include './partials/head.php' ?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SETARA Admin</title>
+    <link rel="icon" type="image/jpg" href="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/setara-app-u27vhs/assets/y4y5ydm2e6to/logo_setara.jpg" sizes="16x16">
+    <!-- BootStrap css -->
+    <link rel="stylesheet" href="assets/css/lib/bootstrap.min.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/lib/iconify-icon.min.js"></script>
+</head>
 
 <body>
 
@@ -15,29 +23,33 @@
         <div class="auth-right py-32 px-24 d-flex flex-column justify-content-center">
             <div class="max-w-464-px mx-auto w-100">
                 <div class="text-center">
-                    <a href="login.php" class="mb-40 max-w-290-px d-inline-block">
-                        <img src="assets/images/logo.png" alt="SETARA Logo">
+                    <a href="login.html" class="mb-40 max-w-290-px d-inline-block">
+                        <img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/setara-app-u27vhs/assets/y4y5ydm2e6to/logo_setara.jpg" alt="SETARA Logo" style="max-height: 120px;">
                     </a>
                     <h4 class="mb-12">Selamat Datang di SETARA</h4>
                     <p class="mb-32 text-secondary-light text-lg">Admin Panel untuk Manajemen Aplikasi Thalassemia</p>
                 </div>
 
-                <div class="mb-24">
-                    <div class="alert alert-primary-focus border border-primary-main d-flex align-items-start gap-3">
-                        <iconify-icon icon="solar:info-circle-outline" class="text-primary-600 text-2xl flex-shrink-0 mt-4"></iconify-icon>
-                        <div>
-                            <h6 class="text-primary-600 mb-4">Mode Demo</h6>
-                            <p class="text-sm text-secondary-light mb-0">
-                                Ini adalah demo SETARA Admin Panel. Klik tombol di bawah untuk langsung mengakses dashboard tanpa perlu login.
-                            </p>
+                <form id="loginForm" class="mb-24">
+                    <div class="mb-20">
+                        <label for="email" class="form-label fw-semibold text-neutral-900">Email</label>
+                        <input type="email" class="form-control radius-8 px-16 py-12" id="email" placeholder="Masukkan email" required>
+                    </div>
+                    <div class="mb-20">
+                        <label for="password" class="form-label fw-semibold text-neutral-900">Password</label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control radius-8 px-16 py-12" id="password" placeholder="Masukkan password" required>
+                            <span class="toggle-password position-absolute top-50 end-0 translate-middle-y me-16 cursor-pointer" onclick="togglePassword()">
+                                <iconify-icon icon="solar:eye-outline" class="icon text-xl"></iconify-icon>
+                            </span>
                         </div>
                     </div>
-                </div>
-
-                <a href="index.php" class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12">
-                    <iconify-icon icon="solar:login-3-outline" class="icon text-xl me-8"></iconify-icon>
-                    Masuk ke Dashboard
-                </a>
+                    <div id="errorMessage" class="alert alert-danger d-none mb-20"></div>
+                    <button type="submit" class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-12" id="loginBtn">
+                        <iconify-icon icon="solar:login-3-outline" class="icon text-xl me-8"></iconify-icon>
+                        Masuk ke Dashboard
+                    </button>
+                </form>
 
                 <div class="mt-32 text-center">
                     <p class="text-sm text-secondary-light mb-12">
@@ -87,7 +99,89 @@
         </div>
     </section>
 
-<?php include './partials/scripts.php' ?>
+    <!-- jQuery library js -->
+    <script src="assets/js/lib/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="assets/js/lib/bootstrap.bundle.min.js"></script>
+    <!-- Iconify Font js -->
+    <script src="assets/js/lib/iconify-icon.min.js"></script>
+
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <!-- Auth Guard -->
+    <script src="assets/js/auth-guard.js"></script>
+
+<script>
+    // Toggle password visibility
+    window.togglePassword = function() {
+        const passwordInput = document.getElementById('password');
+        const icon = document.querySelector('.toggle-password iconify-icon');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.setAttribute('icon', 'solar:eye-closed-outline');
+        } else {
+            passwordInput.type = 'password';
+            icon.setAttribute('icon', 'solar:eye-outline');
+        }
+    };
+
+    // Handle login form submit
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const errorMessage = document.getElementById('errorMessage');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // Show loading state
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
+        errorMessage.classList.add('d-none');
+
+        try {
+            // Use global Firebase auth
+            const auth = window.firebaseAuth;
+            if (!auth) {
+                throw new Error('Firebase Auth belum siap');
+            }
+
+            const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+            console.log('Login successful:', userCredential.user);
+            // Redirect will be handled by auth-guard.js
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error('Login error:', error);
+            let message = 'Login gagal. Silakan coba lagi.';
+
+            if (error.code === 'auth/user-not-found') {
+                message = 'Email tidak terdaftar.';
+            } else if (error.code === 'auth/wrong-password') {
+                message = 'Password salah.';
+            } else if (error.code === 'auth/invalid-email') {
+                message = 'Format email tidak valid.';
+            } else if (error.code === 'auth/too-many-requests') {
+                message = 'Terlalu banyak percobaan login. Silakan coba lagi nanti.';
+            } else if (error.code === 'auth/invalid-credential') {
+                message = 'Email atau password salah.';
+            }
+
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('d-none');
+
+            // Reset button
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<iconify-icon icon="solar:login-3-outline" class="icon text-xl me-8"></iconify-icon> Masuk ke Dashboard';
+        }
+    });
+</script>
 
 </body>
 

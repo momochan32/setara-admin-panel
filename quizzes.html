@@ -126,7 +126,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="#" id="logoutBtn">
                                             <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
                                         </a>
                                     </li>
@@ -261,7 +261,7 @@
                             <iconify-icon icon="solar:document-text-bold" class="text-primary-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Total Pertanyaan</span>
                         </div>
-                        <h4 class="mb-0 text-primary-600"></h4>
+                        <h4 class="mb-0 text-primary-600" id="totalQuizzes">0</h4>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -270,7 +270,7 @@
                             <iconify-icon icon="solar:checklist-minimalistic-bold" class="text-info-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Pilihan Ganda</span>
                         </div>
-                        <h4 class="mb-0 text-info-600">3</h4>
+                        <h4 class="mb-0 text-info-600" id="multipleChoiceCount">0</h4>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -279,7 +279,7 @@
                             <iconify-icon icon="solar:check-circle-bold" class="text-warning-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Benar/Salah</span>
                         </div>
-                        <h4 class="mb-0 text-warning-600">2</h4>
+                        <h4 class="mb-0 text-warning-600" id="trueFalseCount">0</h4>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -288,7 +288,7 @@
                             <iconify-icon icon="solar:star-bold" class="text-success-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Total Poin</span>
                         </div>
-                        <h4 class="mb-0 text-success-600">45</h4>
+                        <h4 class="mb-0 text-success-600" id="totalPoints">0</h4>
                     </div>
                 </div>
             </div>
@@ -297,44 +297,37 @@
 </div>
 
 <!-- Add/Edit Quiz Modal -->
-<div class="modal fade" id="addQuizModal" tabindex="-1" aria-labelledby="addQuizModalLabel" aria-hidden="true">
+<div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addQuizModalLabel">Tambah Pertanyaan Kuis</h5>
+                <h5 class="modal-title" id="quizModalLabel">Tambah Pertanyaan Kuis</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form>
+            <form id="quizForm">
+                <div class="modal-body">
                     <div class="mb-20">
-                        <label class="form-label fw-semibold text-neutral-900">Pilih Modul</label>
-                        <select class="form-select radius-8" required>
+                        <label for="moduleId" class="form-label fw-semibold text-neutral-900">Pilih Modul <span class="text-danger-600">*</span></label>
+                        <select class="form-select radius-8" id="moduleId" required>
                             <option value="">-- Pilih Modul --</option>
-                            <option value="1">Makanan Tinggi Zat Besi</option>
-                            <option value="2">Makanan yang Harus Dihindari</option>
-                            <option value="3">Obat-obatan dan Kepatuhan</option>
                         </select>
                     </div>
 
                     <div class="mb-20">
-                        <label class="form-label fw-semibold text-neutral-900">Pertanyaan</label>
-                        <textarea class="form-control radius-8" rows="3" placeholder="Masukkan pertanyaan kuis..." required></textarea>
+                        <label for="question" class="form-label fw-semibold text-neutral-900">Pertanyaan <span class="text-danger-600">*</span></label>
+                        <textarea class="form-control radius-8" id="question" rows="3" placeholder="Masukkan pertanyaan kuis..." required></textarea>
                     </div>
 
                     <div class="mb-20">
-                        <label class="form-label fw-semibold text-neutral-900">Tipe Pertanyaan</label>
+                        <label class="form-label fw-semibold text-neutral-900">Tipe Pertanyaan <span class="text-danger-600">*</span></label>
                         <div class="d-flex gap-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="questionType" id="typeMultiple" value="multiple_choice" checked>
-                                <label class="form-check-label" for="typeMultiple">
-                                    Pilihan Ganda
-                                </label>
+                                <input class="form-check-input" type="radio" name="questionType" id="typeMultiple" value="Multiple Choice" checked>
+                                <label class="form-check-label" for="typeMultiple">Pilihan Ganda</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="questionType" id="typeTrueFalse" value="true_false">
-                                <label class="form-check-label" for="typeTrueFalse">
-                                    Benar/Salah
-                                </label>
+                                <input class="form-check-input" type="radio" name="questionType" id="typeTrueFalse" value="True False">
+                                <label class="form-check-label" for="typeTrueFalse">Benar/Salah</label>
                             </div>
                         </div>
                     </div>
@@ -346,36 +339,36 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text bg-primary-focus text-primary-600 fw-semibold">A</span>
-                                    <input type="text" class="form-control" placeholder="Opsi A" required>
+                                    <input type="text" class="form-control" id="optionA" placeholder="Opsi A">
                                     <div class="input-group-text">
-                                        <input class="form-check-input mt-0" type="radio" name="correctAnswerMultiple" value="A" title="Tandai sebagai jawaban benar">
+                                        <input class="form-check-input mt-0" type="radio" name="correctAnswer" value="A" title="Tandai sebagai jawaban benar">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text bg-primary-focus text-primary-600 fw-semibold">B</span>
-                                    <input type="text" class="form-control" placeholder="Opsi B" required>
+                                    <input type="text" class="form-control" id="optionB" placeholder="Opsi B">
                                     <div class="input-group-text">
-                                        <input class="form-check-input mt-0" type="radio" name="correctAnswerMultiple" value="B" title="Tandai sebagai jawaban benar">
+                                        <input class="form-check-input mt-0" type="radio" name="correctAnswer" value="B" title="Tandai sebagai jawaban benar">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text bg-primary-focus text-primary-600 fw-semibold">C</span>
-                                    <input type="text" class="form-control" placeholder="Opsi C" required>
+                                    <input type="text" class="form-control" id="optionC" placeholder="Opsi C">
                                     <div class="input-group-text">
-                                        <input class="form-check-input mt-0" type="radio" name="correctAnswerMultiple" value="C" title="Tandai sebagai jawaban benar">
+                                        <input class="form-check-input mt-0" type="radio" name="correctAnswer" value="C" title="Tandai sebagai jawaban benar">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <span class="input-group-text bg-primary-focus text-primary-600 fw-semibold">D</span>
-                                    <input type="text" class="form-control" placeholder="Opsi D" required>
+                                    <input type="text" class="form-control" id="optionD" placeholder="Opsi D">
                                     <div class="input-group-text">
-                                        <input class="form-check-input mt-0" type="radio" name="correctAnswerMultiple" value="D" title="Tandai sebagai jawaban benar">
+                                        <input class="form-check-input mt-0" type="radio" name="correctAnswer" value="D" title="Tandai sebagai jawaban benar">
                                     </div>
                                 </div>
                             </div>
@@ -395,7 +388,7 @@
                                     <span class="input-group-text bg-success-focus text-success-600 fw-semibold">A</span>
                                     <input type="text" class="form-control" value="Benar" readonly>
                                     <div class="input-group-text">
-                                        <input class="form-check-input mt-0" type="radio" name="correctAnswerTrueFalse" value="A" title="Tandai sebagai jawaban benar">
+                                        <input class="form-check-input mt-0" type="radio" name="correctAnswer" value="A" title="Tandai sebagai jawaban benar">
                                     </div>
                                 </div>
                             </div>
@@ -404,7 +397,7 @@
                                     <span class="input-group-text bg-danger-focus text-danger-600 fw-semibold">B</span>
                                     <input type="text" class="form-control" value="Salah" readonly>
                                     <div class="input-group-text">
-                                        <input class="form-check-input mt-0" type="radio" name="correctAnswerTrueFalse" value="B" title="Tandai sebagai jawaban benar">
+                                        <input class="form-check-input mt-0" type="radio" name="correctAnswer" value="B" title="Tandai sebagai jawaban benar">
                                     </div>
                                 </div>
                             </div>
@@ -416,15 +409,18 @@
                     </div>
 
                     <div class="mb-20">
-                        <label class="form-label fw-semibold text-neutral-900">Poin</label>
-                        <input type="number" class="form-control radius-8" placeholder="10" value="10" min="1" required>
+                        <label for="points" class="form-label fw-semibold text-neutral-900">Poin <span class="text-danger-600">*</span></label>
+                        <input type="number" class="form-control radius-8" id="points" placeholder="10" value="10" min="1" required>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-primary-600">Simpan Pertanyaan</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary-600 radius-8" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary-600 radius-8" id="saveQuizBtn">
+                        <iconify-icon icon="solar:diskette-bold" class="icon me-4"></iconify-icon>
+                        Simpan
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -446,45 +442,274 @@
     <script src="assets/js/lib/apexcharts.min.js"></script>
     <script src="assets/js/lib/dataTables.min.js"></script>
     <script src="assets/js/lib/iconify-icon.min.js"></script>
+
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <!-- Auth Guard & Handler -->
+    <script src="assets/js/auth-guard.js"></script>
+    <script src="assets/js/auth-handler.js"></script>
+
     <script src="assets/js/app.js"></script>
 
     <script>
+        // Use global Firebase object
+        const db = window.firebaseDb;
 
-    // Add Quiz Modal
-    $("#addQuizBtn").on("click", function() {
-        $("#addQuizModal").modal("show");
-        $("#addQuizModalLabel").text("Tambah Pertanyaan Kuis");
-        // Show multiple choice by default
-        $("#optionsContainer").show();
-        $("#trueFalseContainer").hide();
-    });
+        const quizModal = new bootstrap.Modal(document.getElementById('quizModal'));
+        let currentEditId = null;
 
-    // Question Type Change
-    $("input[name=questionType]").on("change", function() {
-        if($(this).val() == "true_false") {
-            $("#optionsContainer").slideUp();
-            $("#trueFalseContainer").slideDown();
-        } else {
-            $("#optionsContainer").slideDown();
-            $("#trueFalseContainer").slideUp();
+        // Load modules for dropdown
+        async function loadModules() {
+            try {
+                const querySnapshot = await db.collection('eduModules').orderBy('order', 'asc').get();
+                const select = document.getElementById('moduleId');
+                select.innerHTML = '<option value="">-- Pilih Modul --</option>';
+                querySnapshot.forEach((doc) => {
+                    const module = doc.data();
+                    select.innerHTML += `<option value="${doc.id}">${module.title}</option>`;
+                });
+            } catch (error) {
+                console.error('Error loading modules:', error);
+            }
         }
-    });
 
-    // Delete Quiz
-    $(".delete-quiz-btn").on("click", function() {
-        if(confirm("Apakah Anda yakin ingin menghapus pertanyaan ini?")) {
-            $(this).closest("tr").fadeOut();
-            // TODO: Add Firebase logic to delete quiz
+        // Load quizzes from Firebase
+        async function loadQuizzes() {
+            const tbody = $('tbody');
+            try {
+                tbody.html('<tr><td colspan="7" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
+
+                const querySnapshot = await db.collection('quizzes').get();
+
+                const quizzes = [];
+                querySnapshot.forEach((docSnap) => {
+                    quizzes.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                displayQuizzes(quizzes);
+                updateStatistics(quizzes);
+            } catch (error) {
+                console.error('Error loading quizzes:', error);
+                tbody.html('<tr><td colspan="7" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
+            }
         }
-    });
 
-    // Edit Quiz
-    $(".edit-quiz-btn").on("click", function() {
-        $("#addQuizModal").modal("show");
-        $("#addQuizModalLabel").text("Edit Pertanyaan Kuis");
-        // TODO: Populate modal with quiz data
-    });
+        // Update statistics based on quizzes data
+        function updateStatistics(quizzes) {
+            const totalQuizzes = quizzes.length;
+            const multipleChoiceCount = quizzes.filter(q => q.type === 'Multiple Choice').length;
+            const trueFalseCount = quizzes.filter(q => q.type === 'True False').length;
+            const totalPoints = quizzes.reduce((sum, q) => sum + (q.points || 0), 0);
 
+            document.getElementById('totalQuizzes').textContent = totalQuizzes;
+            document.getElementById('multipleChoiceCount').textContent = multipleChoiceCount;
+            document.getElementById('trueFalseCount').textContent = trueFalseCount;
+            document.getElementById('totalPoints').textContent = totalPoints;
+        }
+
+        function displayQuizzes(quizzes) {
+            const tbody = $('tbody');
+            if (quizzes.length === 0) {
+                tbody.html('<tr><td colspan="7" class="text-center py-32"><p class="text-secondary-light">Belum ada pertanyaan kuis. Klik tombol "Tambah Pertanyaan" untuk mulai.</p></td></tr>');
+                return;
+            }
+
+            tbody.html(quizzes.map((quiz, index) => {
+                const isMultiple = quiz.type === 'Multiple Choice';
+                const options = quiz.options || [];
+
+                return `
+                <tr>
+                    <td class="text-center">
+                        <span class="text-secondary-light fw-medium">${String(index + 1).padStart(2, '0')}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary-focus text-primary-600 px-12 py-6 radius-4 fw-medium text-sm">
+                            Modul ${index + 1}
+                        </span>
+                    </td>
+                    <td>
+                        <p class="text-sm mb-8 fw-semibold">${quiz.question}</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            ${options.map((opt, i) => {
+                                const letter = String.fromCharCode(65 + i);
+                                const isCorrect = quiz.correctAnswer === letter;
+                                return `<span class="badge ${isCorrect ? 'bg-success-600 text-white' : 'bg-neutral-200 text-neutral-900'} px-8 py-4 text-xs">
+                                    ${letter}: ${opt}
+                                </span>`;
+                            }).join('')}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge ${isMultiple ? 'bg-info-focus text-info-600' : 'bg-warning-focus text-warning-600'} px-12 py-6 radius-4 fw-medium text-sm">
+                            ${isMultiple ? 'Pilihan Ganda' : 'Benar/Salah'}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge bg-success-600 text-white px-12 py-6 radius-4 fw-semibold">
+                            ${quiz.correctAnswer}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <span class="text-primary-600 fw-semibold">${quiz.points}</span>
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex align-items-center gap-8 justify-content-center">
+                            <button type="button" class="edit-btn bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-id="${quiz.id}" data-item='${JSON.stringify(quiz)}' title="Edit">
+                                <iconify-icon icon="lucide:edit" class="icon text-lg"></iconify-icon>
+                            </button>
+                            <button type="button" class="delete-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-id="${quiz.id}" title="Hapus">
+                                <iconify-icon icon="fluent:delete-24-regular" class="icon text-lg"></iconify-icon>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join(''));
+        }
+
+        // Add Quiz Modal
+        document.getElementById('addQuizBtn').addEventListener('click', () => {
+            currentEditId = null;
+            document.getElementById('quizModalLabel').textContent = 'Tambah Pertanyaan Kuis';
+            document.getElementById('quizForm').reset();
+            document.getElementById('optionsContainer').style.display = 'block';
+            document.getElementById('trueFalseContainer').style.display = 'none';
+
+            // Reset and set default correct answer to A
+            const firstCorrectAnswer = document.querySelector('input[name="correctAnswer"][value="A"]');
+            if (firstCorrectAnswer) {
+                firstCorrectAnswer.checked = true;
+            }
+
+            quizModal.show();
+        });
+
+        // Question Type Change
+        $("input[name=questionType]").on("change", function() {
+            if($(this).val() === "True False") {
+                $("#optionsContainer").slideUp();
+                $("#trueFalseContainer").slideDown();
+            } else {
+                $("#optionsContainer").slideDown();
+                $("#trueFalseContainer").slideUp();
+            }
+        });
+
+        // Edit Quiz
+        $(document).on('click', '.edit-btn', function() {
+            const quiz = JSON.parse($(this).attr('data-item'));
+            currentEditId = quiz.id;
+
+            document.getElementById('quizModalLabel').textContent = 'Edit Pertanyaan Kuis';
+            document.getElementById('moduleId').value = quiz.moduleId;
+            document.getElementById('question').value = quiz.question;
+            document.getElementById('points').value = quiz.points;
+
+            if (quiz.type === 'Multiple Choice') {
+                document.getElementById('typeMultiple').checked = true;
+                document.getElementById('optionA').value = quiz.options[0] || '';
+                document.getElementById('optionB').value = quiz.options[1] || '';
+                document.getElementById('optionC').value = quiz.options[2] || '';
+                document.getElementById('optionD').value = quiz.options[3] || '';
+                document.getElementById('optionsContainer').style.display = 'block';
+                document.getElementById('trueFalseContainer').style.display = 'none';
+            } else {
+                document.getElementById('typeTrueFalse').checked = true;
+                document.getElementById('optionsContainer').style.display = 'none';
+                document.getElementById('trueFalseContainer').style.display = 'block';
+            }
+
+            $(`input[name=correctAnswer][value=${quiz.correctAnswer}]`).prop('checked', true);
+            quizModal.show();
+        });
+
+        // Delete Quiz
+        $(document).on('click', '.delete-btn', async function() {
+            const id = $(this).data('id');
+
+            if (confirm('Apakah Anda yakin ingin menghapus pertanyaan ini?')) {
+                try {
+                    await db.collection('quizzes').doc(id).delete();
+                    alert('Pertanyaan berhasil dihapus!');
+                    loadQuizzes();
+                } catch (error) {
+                    console.error('Error deleting quiz:', error);
+                    alert('Gagal menghapus pertanyaan: ' + error.message);
+                }
+            }
+        });
+
+        // Form Submit
+        document.getElementById('quizForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const saveBtn = document.getElementById('saveQuizBtn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+
+            // Validate correct answer is selected
+            const correctAnswerElement = document.querySelector('input[name="correctAnswer"]:checked');
+            if (!correctAnswerElement) {
+                alert('Silakan pilih jawaban yang benar!');
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+                return;
+            }
+
+            const questionType = document.querySelector('input[name="questionType"]:checked').value;
+            const data = {
+                moduleId: document.getElementById('moduleId').value,
+                question: document.getElementById('question').value,
+                type: questionType,
+                correctAnswer: correctAnswerElement.value,
+                points: parseInt(document.getElementById('points').value)
+            };
+
+            if (questionType === 'Multiple Choice') {
+                data.options = [
+                    document.getElementById('optionA').value,
+                    document.getElementById('optionB').value,
+                    document.getElementById('optionC').value,
+                    document.getElementById('optionD').value
+                ];
+            } else {
+                data.options = ['Benar', 'Salah'];
+            }
+
+            try {
+                if (currentEditId) {
+                    await db.collection('quizzes').doc(currentEditId).update(data);
+                    alert('Pertanyaan berhasil diupdate!');
+                } else {
+                    await db.collection('quizzes').add(data);
+                    alert('Pertanyaan berhasil ditambahkan!');
+                }
+
+                quizModal.hide();
+                loadQuizzes();
+            } catch (error) {
+                console.error('Error saving quiz:', error);
+                alert('Gagal menyimpan pertanyaan: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+            }
+        });
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadModules();
+            loadQuizzes();
+        });
     </script>
 
 </body>

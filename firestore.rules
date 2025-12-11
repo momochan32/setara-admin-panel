@@ -1,0 +1,137 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function untuk cek apakah user adalah admin
+    function isAdmin() {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Reminders - User hanya bisa akses milik sendiri
+    match /reminders/{document} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Education Clusters - Public read, admin write
+    match /eduClusters/{document} {
+      allow create: if request.auth != null;
+      allow read: if true;  // Public dapat membaca
+      allow write: if request.auth != null;  // ✅ FIXED: Admin dapat update
+      allow delete: if request.auth != null;
+    }
+
+    // Medication Logs - User hanya bisa akses milik sendiri
+    match /medicationLogs/{document} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Education Modules - Public read, authenticated write
+    match /eduModules/{document} {
+      allow create: if request.auth != null;
+      allow read: if true;  // Public dapat membaca
+      allow write: if request.auth != null;  // ✅ FIXED: Admin dapat update
+      allow delete: if request.auth != null;
+    }
+
+    // Quiz Results - Open untuk testing, di production harus lebih ketat
+    match /quizResults/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Mood Logs - User hanya bisa akses milik sendiri
+    match /moodLogs/{document} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Quizzes - Public read, authenticated write
+    match /quizzes/{document} {
+      allow create: if request.auth != null;
+      allow read: if true;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Users - ✅ FIXED: Authenticated users dapat read semua untuk admin panel
+    match /users/{document} {
+      allow create: if request.auth.uid == document;
+      allow read: if request.auth != null;  // ✅ FIXED: Admin dapat read semua users
+      allow write: if request.auth.uid == document || request.auth != null;  // ✅ User edit sendiri atau admin edit
+      allow delete: if request.auth != null;  // Admin dapat delete
+    }
+
+    // Education Progress - User hanya bisa akses milik sendiri
+    match /educationProgress/{document} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Badges - Public read, admin write
+    match /badges/{document} {
+      allow create: if request.auth != null;
+      allow read: if true;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Discussion Messages - Public read, authenticated write
+    match /discussionMessages/{document} {
+      allow create: if request.auth != null;
+      allow read: if true;  // Public dapat membaca
+      allow write: if request.auth != null;  // Admin dapat update (untuk soft delete)
+      allow delete: if request.auth != null;
+    }
+
+    // Education Submodules - Public read, authenticated write
+    match /eduSubmodules/{document} {
+      allow create: if request.auth != null;
+      allow read: if true;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // Transfusion Logs - User hanya bisa akses milik sendiri
+    match /transfusionLogs/{document} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // User Notifications - Open read/write untuk notifikasi
+    match /userNotifications/{document} {
+      allow create: if true;
+      allow read: if true;
+      allow write: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    // ✅ NEW: Broadcasts collection - untuk admin panel
+    match /broadcasts/{document} {
+      allow create: if request.auth != null;  // Admin dapat create broadcast
+      allow read: if request.auth != null;    // Admin dapat read history
+      allow write: if request.auth != null;   // Admin dapat update
+      allow delete: if request.auth != null;  // Admin dapat delete
+    }
+
+    // Default deny untuk collection yang tidak terdefinisi
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

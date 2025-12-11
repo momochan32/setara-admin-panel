@@ -26,9 +26,9 @@
         </button>
         <div>
             <a href="index.html" class="sidebar-logo">
-                <img src="assets/images/logo.png" alt="site logo" class="light-logo">
-                <img src="assets/images/logo-light.png" alt="site logo" class="dark-logo">
-                <img src="assets/images/logo-icon.png" alt="site logo" class="logo-icon">
+                <img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/setara-app-u27vhs/assets/y4y5ydm2e6to/logo_setara.jpg" alt="SETARA Logo" class="light-logo" style="max-height: 50px;">
+                <img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/setara-app-u27vhs/assets/y4y5ydm2e6to/logo_setara.jpg" alt="SETARA Logo" class="dark-logo" style="max-height: 50px;">
+                <img src="https://storage.googleapis.com/flutterflow-io-6f20.appspot.com/projects/setara-app-u27vhs/assets/y4y5ydm2e6to/logo_setara.jpg" alt="SETARA Logo" class="logo-icon" style="max-height: 40px;">
             </a>
         </div>
         <div class="sidebar-menu-area">
@@ -133,7 +133,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="#" id="logoutBtn">
                                             <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
                                         </a>
                                     </li>
@@ -201,12 +201,12 @@
                                             No
                                         </div>
                                     </th>
-                                    <th scope="col">Nama & Foto</th>
+                                    <th scope="col">Nama</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Tipe Thalassemia</th>
                                     <th scope="col">Level</th>
-                                    <th scope="col" class="text-center">Total Poin</th>
-                                    <th scope="col" class="text-center">Status</th>
+                                    <th scope="col" class="text-center">Poin</th>
+                                    <th scope="col" class="text-center">Self-Care Score</th>
                                     <th scope="col" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -251,6 +251,141 @@
         </footer>
     </main>
 
+    <!-- View User Detail Modal -->
+    <div class="modal fade" id="viewUserModal" tabindex="-1" aria-labelledby="viewUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewUserModalLabel">Detail Pengguna</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nama Lengkap</label>
+                            <p class="text-secondary-light mb-0" id="viewDisplayName">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email</label>
+                            <p class="text-secondary-light mb-0" id="viewEmail">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Tipe Thalassemia</label>
+                            <p class="text-secondary-light mb-0" id="viewThalassemiaType">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Golongan Darah</label>
+                            <p class="text-secondary-light mb-0" id="viewBloodType">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Level Saat Ini</label>
+                            <p class="text-secondary-light mb-0" id="viewCurrentLevel">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Total Poin</label>
+                            <p class="text-secondary-light mb-0" id="viewTotalPoints">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Self-Care Score</label>
+                            <p class="text-secondary-light mb-0" id="viewSelfCareScore">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Rumah Sakit</label>
+                            <p class="text-secondary-light mb-0" id="viewHospital">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Role</label>
+                            <p class="text-secondary-light mb-0" id="viewRole">-</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">User ID</label>
+                            <p class="text-secondary-light mb-0 text-xs" id="viewUserId">-</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Edit Pengguna</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editUserForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="editUserId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Nama Lengkap <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="editDisplayName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="editEmail" required readonly>
+                                <small class="text-muted">Email tidak dapat diubah</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tipe Thalassemia</label>
+                                <select class="form-select" id="editThalassemiaType">
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="Mayor">Mayor</option>
+                                    <option value="Minor">Minor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Golongan Darah</label>
+                                <input type="text" class="form-control" id="editBloodType" placeholder="contoh: A+, B-, O+">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Level</label>
+                                <select class="form-select" id="editCurrentLevel">
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Warrior">Warrior</option>
+                                    <option value="Champion">Champion</option>
+                                    <option value="Hero">Hero</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Total Poin</label>
+                                <input type="number" class="form-control" id="editTotalPoints" min="0">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Self-Care Score (0-100)</label>
+                                <input type="number" class="form-control" id="editSelfCareScore" min="0" max="100">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Rumah Sakit</label>
+                                <input type="text" class="form-control" id="editHospital">
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">Role</label>
+                                <select class="form-select" id="editRole">
+                                    <option value="user">User</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <small class="text-muted">Hati-hati mengubah role user menjadi admin</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" id="saveUserBtn">
+                            <iconify-icon icon="lucide:save" class="icon me-2"></iconify-icon>
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- jQuery library js -->
     <script src="assets/js/lib/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap js -->
@@ -259,27 +394,56 @@
     <script src="assets/js/lib/apexcharts.min.js"></script>
     <!-- Iconify Font js -->
     <script src="assets/js/lib/iconify-icon.min.js"></script>
+
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <!-- Auth Guard & Handler -->
+    <script src="assets/js/auth-guard.js"></script>
+    <script src="assets/js/auth-handler.js"></script>
+
     <!-- Main js -->
     <script src="assets/js/app.js"></script>
 
     <!-- Firebase Integration -->
-    <script type="module">
-        import { db } from './assets/js/firebase-config.js';
-        import { usersAPI } from './assets/js/firebase-crud.js';
+    <script>
+        // Use global Firebase object
+        const db = window.firebaseDb;
 
-        // Load users data
+        // Load users data from Firebase
         async function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            const tableInfo = document.getElementById('tableInfo');
+
             try {
-                const result = await usersAPI.getAll();
-                if (result.success && result.data) {
-                    displayUsers(result.data);
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>';
+
+                const querySnapshot = await db.collection('users').orderBy('display_name', 'asc').get();
+
+                const users = [];
+                querySnapshot.forEach((doc) => {
+                    users.push({
+                        uid: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                if (users.length > 0) {
+                    displayUsers(users);
                 } else {
-                    console.error('Error loading users:', result.error);
-                    document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="8" class="text-center">Gagal memuat data pengguna</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center">Tidak ada data pengguna</td></tr>';
+                    tableInfo.textContent = 'Menampilkan 0 dari 0 entri';
                 }
             } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="8" class="text-center">Terjadi kesalahan</td></tr>';
+                console.error('Error loading users:', error);
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-danger">Gagal memuat data: ' + error.message + '</td></tr>';
+                tableInfo.textContent = 'Error';
             }
         }
 
@@ -307,14 +471,14 @@
                         <div class="d-flex align-items-center">
                             <img src="assets/images/user-list/user-list${(index % 8) + 1}.png" alt="" class="w-40-px h-40-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
                             <div class="flex-grow-1">
-                                <span class="text-md mb-0 fw-normal text-secondary-light">${user.name || 'N/A'}</span>
+                                <span class="text-md mb-0 fw-normal text-secondary-light">${user.display_name || user.displayName || 'N/A'}</span>
                             </div>
                         </div>
                     </td>
                     <td><span class="text-md mb-0 fw-normal text-secondary-light">${user.email || 'N/A'}</span></td>
                     <td>
-                        <span class="${user.thalassemiaType === 'mayor' ? 'text-danger-600' : 'text-warning-600'} fw-medium">
-                            Thalassemia ${user.thalassemiaType === 'mayor' ? 'Mayor' : 'Minor'}
+                        <span class="${user.thalassemiaType === 'Mayor' ? 'text-danger-600' : 'text-warning-600'} fw-medium">
+                            ${user.thalassemiaType || 'N/A'}
                         </span>
                     </td>
                     <td>
@@ -326,15 +490,17 @@
                         <span class="text-primary-600 fw-semibold">${user.totalPoints || 0}</span>
                     </td>
                     <td class="text-center">
-                        <span class="bg-success-focus text-success-600 border border-success-main px-24 py-4 radius-4 fw-medium text-sm">Active</span>
+                        <span class="badge ${user.selfCareScore >= 70 ? 'bg-success-600' : user.selfCareScore >= 40 ? 'bg-warning-600' : 'bg-danger-600'} text-white px-12 py-6 radius-4 fw-medium text-sm">
+                            ${user.selfCareScore || 0}%
+                        </span>
                     </td>
                     <td class="text-center">
                         <div class="d-flex align-items-center gap-10 justify-content-center">
-                            <button type="button" class="view-detail-btn bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle" data-user-id="${user.id}">
+                            <button type="button" class="view-detail-btn bg-info-focus bg-hover-info-200 text-info-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle" data-user-id="${user.uid || user.id}">
                                 <iconify-icon icon="majesticons:eye-line" class="icon text-xl"></iconify-icon>
                             </button>
-                            <button type="button" class="ban-item-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle" title="Ban User" data-user-id="${user.id}">
-                                <iconify-icon icon="material-symbols:block" class="menu-icon"></iconify-icon>
+                            <button type="button" class="edit-item-btn bg-success-focus bg-hover-success-200 text-success-600 fw-medium w-40-px h-40-px d-flex justify-content-center align-items-center rounded-circle" title="Edit User" data-user-id="${user.uid || user.id}">
+                                <iconify-icon icon="lucide:edit" class="menu-icon"></iconify-icon>
                             </button>
                         </div>
                     </td>
@@ -344,11 +510,110 @@
             tableInfo.textContent = `Menampilkan 1 hingga ${users.length} dari ${users.length} entri`;
         }
 
-        // Event handlers
-        $(document).on('click', '.ban-item-btn', function() {
-            if(confirm('Apakah Anda yakin ingin mem-ban pengguna ini?')) {
-                $(this).closest('tr').addClass('d-none');
-                // TODO: Add Firebase logic to ban user
+        // View User Detail Handler
+        $(document).on('click', '.view-detail-btn', async function() {
+            const userId = $(this).data('user-id');
+
+            try {
+                const doc = await db.collection('users').doc(userId).get();
+                if (doc.exists) {
+                    const user = doc.data();
+
+                    // Populate view modal
+                    document.getElementById('viewDisplayName').textContent = user.display_name || user.displayName || '-';
+                    document.getElementById('viewEmail').textContent = user.email || '-';
+                    document.getElementById('viewThalassemiaType').textContent = user.thalassemiaType || '-';
+                    document.getElementById('viewBloodType').textContent = user.bloodType || '-';
+                    document.getElementById('viewCurrentLevel').textContent = user.currentLevel || 'Beginner';
+                    document.getElementById('viewTotalPoints').textContent = user.totalPoints || '0';
+                    document.getElementById('viewSelfCareScore').textContent = (user.selfCareScore || 0) + '%';
+                    document.getElementById('viewHospital').textContent = user.hospital || '-';
+                    document.getElementById('viewRole').textContent = user.role || 'user';
+                    document.getElementById('viewUserId').textContent = userId;
+
+                    // Show modal
+                    const viewModal = new bootstrap.Modal(document.getElementById('viewUserModal'));
+                    viewModal.show();
+                } else {
+                    alert('User tidak ditemukan!');
+                }
+            } catch (error) {
+                console.error('Error loading user details:', error);
+                alert('Gagal memuat detail user: ' + error.message);
+            }
+        });
+
+        // Edit User Handler
+        $(document).on('click', '.edit-item-btn', async function() {
+            const userId = $(this).data('user-id');
+
+            try {
+                const doc = await db.collection('users').doc(userId).get();
+                if (doc.exists) {
+                    const user = doc.data();
+
+                    // Populate edit modal
+                    document.getElementById('editUserId').value = userId;
+                    document.getElementById('editDisplayName').value = user.display_name || user.displayName || '';
+                    document.getElementById('editEmail').value = user.email || '';
+                    document.getElementById('editThalassemiaType').value = user.thalassemiaType || '';
+                    document.getElementById('editBloodType').value = user.bloodType || '';
+                    document.getElementById('editCurrentLevel').value = user.currentLevel || 'Beginner';
+                    document.getElementById('editTotalPoints').value = user.totalPoints || 0;
+                    document.getElementById('editSelfCareScore').value = user.selfCareScore || 0;
+                    document.getElementById('editHospital').value = user.hospital || '';
+                    document.getElementById('editRole').value = user.role || 'user';
+
+                    // Show modal
+                    const editModal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                    editModal.show();
+                } else {
+                    alert('User tidak ditemukan!');
+                }
+            } catch (error) {
+                console.error('Error loading user for edit:', error);
+                alert('Gagal memuat data user: ' + error.message);
+            }
+        });
+
+        // Save Edit User Handler
+        document.getElementById('editUserForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const userId = document.getElementById('editUserId').value;
+            const saveBtn = document.getElementById('saveUserBtn');
+            const originalText = saveBtn.innerHTML;
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+
+            const updateData = {
+                display_name: document.getElementById('editDisplayName').value,
+                thalassemiaType: document.getElementById('editThalassemiaType').value,
+                bloodType: document.getElementById('editBloodType').value,
+                currentLevel: document.getElementById('editCurrentLevel').value,
+                totalPoints: parseInt(document.getElementById('editTotalPoints').value) || 0,
+                selfCareScore: parseInt(document.getElementById('editSelfCareScore').value) || 0,
+                hospital: document.getElementById('editHospital').value,
+                role: document.getElementById('editRole').value
+            };
+
+            try {
+                await db.collection('users').doc(userId).update(updateData);
+                alert('Data user berhasil diupdate!');
+
+                // Close modal
+                const editModal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+                editModal.hide();
+
+                // Reload users
+                loadUsers();
+            } catch (error) {
+                console.error('Error updating user:', error);
+                alert('Gagal mengupdate user: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
             }
         });
 

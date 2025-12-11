@@ -126,7 +126,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="#" id="logoutBtn">
                                             <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
                                         </a>
                                     </li>
@@ -278,24 +278,108 @@
     <script src="assets/js/lib/apexcharts.min.js"></script>
     <script src="assets/js/lib/dataTables.min.js"></script>
     <script src="assets/js/lib/iconify-icon.min.js"></script>
+
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <!-- Auth Guard & Handler -->
+    <script src="assets/js/auth-guard.js"></script>
+    <script src="assets/js/auth-handler.js"></script>
+
     <script src="assets/js/app.js"></script>
 
     <script>
+        // Use global Firebase object
+        const db = window.firebaseDb;
 
-    // Delete Message (Soft Delete)
-    $(".delete-message-btn").on("click", function() {
-        if(confirm("Apakah Anda yakin ingin menghapus pesan ini?")) {
-            var messageItem = $(this).closest(".chat-message-item");
-            messageItem.fadeOut(300, function() {
-                messageItem.remove();
-            });
-            // TODO: Add Firebase logic to set isDeletedByAdmin = true
+        // Load discussion messages from Firebase
+        async function loadMessages() {
+            const container = $('.chat-message-list');
+            try {
+                container.html('<div class="text-center py-32"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+                const querySnapshot = await db.collection('discussionMessages').orderBy('timestamp', 'asc').get();
+
+                const messages = [];
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (!data.isDeletedByAdmin) {
+                        messages.push({ id: docSnap.id, ...data });
+                    }
+                });
+
+                displayMessages(messages);
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                container.html('<div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div>');
+            }
         }
-    });
 
-    // Auto-scroll to bottom
-    $(".chat-message-list").scrollTop($(".chat-message-list")[0].scrollHeight);
+        function displayMessages(messages) {
+            const container = $('.chat-message-list');
+            if (messages.length === 0) {
+                container.html('<div class="text-center py-32"><p class="text-secondary-light">Belum ada pesan diskusi.</p></div>');
+                return;
+            }
 
+            container.html(messages.map(msg => {
+                const userImage = msg.senderImage || 'assets/images/user.png';
+                const timestamp = msg.timestamp ? new Date(msg.timestamp.seconds * 1000).toLocaleString('id-ID') : 'Baru saja';
+                const reportBadge = msg.reportCount > 0 ? `<span class="badge bg-danger-600 text-white ms-2">${msg.reportCount} laporan</span>` : '';
+
+                return `
+                <div class="chat-message-item mb-24 position-relative" data-message-id="${msg.id}">
+                    <div class="d-flex align-items-start gap-3">
+                        <img src="${userImage}" alt="${msg.senderName}" class="w-48-px h-48-px rounded-circle flex-shrink-0" onerror="this.src='assets/images/user.png'">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between mb-8">
+                                <div>
+                                    <h6 class="text-md mb-0 fw-semibold">${msg.senderName}${reportBadge}</h6>
+                                    <span class="text-xs text-secondary-light">${timestamp}</span>
+                                </div>
+                                <button type="button" class="delete-btn btn btn-sm btn-outline-danger-600 px-12 py-6 radius-8" data-id="${msg.id}" title="Hapus Pesan">
+                                    <iconify-icon icon="fluent:delete-24-regular" class="icon"></iconify-icon>
+                                </button>
+                            </div>
+                            <div class="bg-white p-16 radius-12 border">
+                                <p class="text-sm text-secondary-light mb-0 line-height-1-6">${msg.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join(''));
+
+            // Auto-scroll to bottom
+            container.scrollTop(container[0].scrollHeight);
+        }
+
+        // Delete Message (Soft Delete)
+        $(document).on('click', '.delete-btn', async function() {
+            const id = $(this).data('id');
+
+            if(confirm("Apakah Anda yakin ingin menghapus pesan ini?")) {
+                try {
+                    await db.collection('discussionMessages').doc(id).update({
+                        isDeletedByAdmin: true
+                    });
+                    alert('Pesan berhasil dihapus!');
+                    loadMessages();
+                } catch (error) {
+                    console.error('Error deleting message:', error);
+                    alert('Gagal menghapus pesan: ' + error.message);
+                }
+            }
+        });
+
+        // Load messages on page load
+        document.addEventListener('DOMContentLoaded', loadMessages);
     </script>
 
 </body>

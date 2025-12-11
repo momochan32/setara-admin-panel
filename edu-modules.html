@@ -133,7 +133,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="#" id="logoutBtn">
                                             <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
                                         </a>
                                     </li>
@@ -216,7 +216,7 @@
                             <iconify-icon icon="solar:check-circle-bold" class="text-success-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Published</span>
                         </div>
-                        <h4 class="mb-0 text-success-600">6</h4>
+                        <h4 class="mb-0 text-success-600" id="publishedCount">0</h4>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -225,7 +225,7 @@
                             <iconify-icon icon="solar:file-text-bold" class="text-warning-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Draft</span>
                         </div>
-                        <h4 class="mb-0 text-warning-600">2</h4>
+                        <h4 class="mb-0 text-warning-600" id="draftCount">0</h4>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -234,7 +234,7 @@
                             <iconify-icon icon="solar:clock-circle-bold" class="text-info-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Total Waktu</span>
                         </div>
-                        <h4 class="mb-0 text-info-600">100 Min</h4>
+                        <h4 class="mb-0 text-info-600" id="totalTime">0 Min</h4>
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6">
@@ -243,7 +243,7 @@
                             <iconify-icon icon="solar:layers-bold" class="text-primary-600 text-2xl"></iconify-icon>
                             <span class="text-sm text-secondary-light">Sub-Modul</span>
                         </div>
-                        <h4 class="mb-0 text-primary-600">28</h4>
+                        <h4 class="mb-0 text-primary-600" id="submoduleCount">0</h4>
                     </div>
                 </div>
             </div>
@@ -264,6 +264,57 @@
         </footer>
     </main>
 
+    <!-- Modal Add/Edit Module -->
+    <div class="modal fade" id="moduleModal" tabindex="-1" aria-labelledby="moduleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="moduleModalLabel">Tambah Modul</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="moduleForm">
+                    <div class="modal-body">
+                        <div class="mb-20">
+                            <label for="clusterId" class="form-label fw-semibold text-neutral-900">Klaster <span class="text-danger-600">*</span></label>
+                            <select class="form-select radius-8" id="clusterId" required>
+                                <option value="">-- Pilih Klaster --</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-20">
+                            <label for="title" class="form-label fw-semibold text-neutral-900">Judul Modul <span class="text-danger-600">*</span></label>
+                            <input type="text" class="form-control radius-8" id="title" placeholder="contoh: Makanan Tinggi Zat Besi" required>
+                        </div>
+
+                        <div class="mb-20">
+                            <label for="description" class="form-label fw-semibold text-neutral-900">Deskripsi <span class="text-danger-600">*</span></label>
+                            <textarea class="form-control radius-8" id="description" rows="3" placeholder="Deskripsi singkat tentang modul ini..." required></textarea>
+                        </div>
+
+                        <div class="mb-20">
+                            <label for="estimatedTime" class="form-label fw-semibold text-neutral-900">Estimasi Waktu (Menit) <span class="text-danger-600">*</span></label>
+                            <input type="number" class="form-control radius-8" id="estimatedTime" placeholder="15" min="1" required>
+                            <small class="text-secondary-light">Perkiraan waktu untuk menyelesaikan modul (dalam menit)</small>
+                        </div>
+
+                        <div class="mb-20">
+                            <label for="order" class="form-label fw-semibold text-neutral-900">Urutan <span class="text-danger-600">*</span></label>
+                            <input type="number" class="form-control radius-8" id="order" placeholder="1" min="1" required>
+                            <small class="text-secondary-light">Urutan tampilan modul (1 = paling atas)</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary-600 radius-8" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary-600 radius-8" id="saveModuleBtn">
+                            <iconify-icon icon="solar:diskette-bold" class="icon me-4"></iconify-icon>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- jQuery library js -->
     <script src="assets/js/lib/jquery-3.7.1.min.js"></script>
     <!-- Bootstrap js -->
@@ -275,16 +326,92 @@
     <!-- Main js -->
     <script src="assets/js/app.js"></script>
 
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <!-- Auth Guard & Handler -->
+    <script src="assets/js/auth-guard.js"></script>
+    <script src="assets/js/auth-handler.js"></script>
+
     <script>
-        // Static data for display
-        const staticModules = [
-            { id: 1, title: 'Makanan Tinggi Zat Besi', description: 'Pengenalan makanan yang kaya zat besi', estimatedTime: 15, order: 1, submoduleCount: 4, isPublished: true },
-            { id: 2, title: 'Makanan yang Harus Dihindari', description: 'Daftar makanan yang sebaiknya dihindari', estimatedTime: 12, order: 2, submoduleCount: 3, isPublished: true },
-            { id: 3, title: 'Menu Sehat Harian', description: 'Contoh menu makanan sehat', estimatedTime: 20, order: 3, submoduleCount: 5, isPublished: true }
-        ];
+        const db = window.firebaseDb;
+        const moduleModal = new bootstrap.Modal(document.getElementById('moduleModal'));
+        let currentEditId = null;
+
+        // Load clusters for dropdown
+        async function loadClusters() {
+            try {
+                const querySnapshot = await db.collection('eduClusters').orderBy('order', 'asc').get();
+                const select = document.getElementById('clusterId');
+                select.innerHTML = '<option value="">-- Pilih Klaster --</option>';
+                querySnapshot.forEach((doc) => {
+                    const cluster = doc.data();
+                    select.innerHTML += `<option value="${doc.id}">${cluster.title}</option>`;
+                });
+            } catch (error) {
+                console.error('Error loading clusters:', error);
+            }
+        }
+
+        // Load modules from Firebase
+        async function loadModules() {
+            const tbody = $('#modulesTableBody');
+            try {
+                tbody.html('<tr><td colspan="8" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
+
+                const querySnapshot = await db.collection('eduModules').orderBy('order', 'asc').get();
+
+                const modules = [];
+                for (const docSnap of querySnapshot.docs) {
+                    const moduleData = { id: docSnap.id, ...docSnap.data() };
+
+                    // Get submodule count
+                    const submoduleSnapshot = await db.collection('eduSubmodules').where('moduleId', '==', docSnap.id).get();
+                    moduleData.submoduleCount = submoduleSnapshot.size;
+
+                    modules.push(moduleData);
+                }
+
+                displayModules(modules);
+                updateStatistics(modules);
+            } catch (error) {
+                console.error('Error loading modules:', error);
+                tbody.html('<tr><td colspan="8" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
+            }
+        }
+
+        // Update statistics based on modules data
+        function updateStatistics(modules) {
+            // Count published and draft
+            const publishedCount = modules.filter(m => m.isPublished === true).length;
+            const draftCount = modules.filter(m => m.isPublished === false || !m.isPublished).length;
+
+            // Calculate total time
+            const totalTime = modules.reduce((sum, m) => sum + (m.estimatedTime || 0), 0);
+
+            // Calculate total submodules
+            const totalSubmodules = modules.reduce((sum, m) => sum + (m.submoduleCount || 0), 0);
+
+            // Update UI
+            document.getElementById('publishedCount').textContent = publishedCount;
+            document.getElementById('draftCount').textContent = draftCount;
+            document.getElementById('totalTime').textContent = totalTime + ' Min';
+            document.getElementById('submoduleCount').textContent = totalSubmodules;
+        }
 
         function displayModules(modules) {
             const tbody = $('#modulesTableBody');
+            if (modules.length === 0) {
+                tbody.html('<tr><td colspan="8" class="text-center py-32"><p class="text-secondary-light">Belum ada modul. Klik tombol "Tambah Modul" untuk mulai.</p></td></tr>');
+                return;
+            }
+
             tbody.html(modules.map((module, index) => `
                 <tr>
                     <td class="text-center">
@@ -308,7 +435,7 @@
                         </span>
                     </td>
                     <td class="text-center">
-                        <span class="text-primary-600 fw-semibold">${module.submoduleCount}</span>
+                        <span class="text-primary-600 fw-semibold">${module.submoduleCount || 0}</span>
                     </td>
                     <td class="text-center">
                         <span class="status-badge ${module.isPublished ? 'bg-success-focus text-success-600 border border-success-main' : 'bg-warning-focus text-warning-600 border border-warning-main'} px-16 py-4 radius-4 fw-medium text-sm">
@@ -320,13 +447,10 @@
                             <a href="edu-contents.html?module_id=${module.id}" class="bg-primary-focus bg-hover-primary-200 text-primary-600 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" title="Kelola Sub-Modul">
                                 <iconify-icon icon="solar:document-text-outline" class="icon text-lg"></iconify-icon>
                             </a>
-                            <button type="button" class="edit-module-btn bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-module-id="${module.id}" title="Edit Modul">
+                            <button type="button" class="edit-btn bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-id="${module.id}" data-item='${JSON.stringify(module)}' title="Edit Modul">
                                 <iconify-icon icon="lucide:edit" class="icon text-lg"></iconify-icon>
                             </button>
-                            <button type="button" class="toggle-publish-btn bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" title="Toggle Publish">
-                                <iconify-icon icon="solar:eye-outline" class="icon text-lg"></iconify-icon>
-                            </button>
-                            <button type="button" class="delete-module-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" title="Hapus Modul">
+                            <button type="button" class="delete-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-id="${module.id}" title="Hapus Modul">
                                 <iconify-icon icon="fluent:delete-24-regular" class="icon text-lg"></iconify-icon>
                             </button>
                         </div>
@@ -335,34 +459,87 @@
             `).join(''));
         }
 
-        $(document).ready(function() {
-            displayModules(staticModules);
+        // Add Module Button
+        document.getElementById('addModuleBtn').addEventListener('click', () => {
+            currentEditId = null;
+            document.getElementById('moduleModalLabel').textContent = 'Tambah Modul';
+            document.getElementById('moduleForm').reset();
+            moduleModal.show();
         });
 
-        $("#addModuleBtn").on("click", function() {
-            alert("Tambah Modul - Fitur akan diintegrasikan dengan Firebase");
+        // Edit Module Button
+        $(document).on('click', '.edit-btn', function() {
+            const module = JSON.parse($(this).attr('data-item'));
+            currentEditId = module.id;
+
+            document.getElementById('moduleModalLabel').textContent = 'Edit Modul';
+            document.getElementById('clusterId').value = module.clusterId;
+            document.getElementById('title').value = module.title;
+            document.getElementById('description').value = module.description;
+            document.getElementById('estimatedTime').value = module.estimatedTime;
+            document.getElementById('order').value = module.order;
+
+            moduleModal.show();
         });
 
-        $(document).on('click', '.delete-module-btn', function() {
-            if(confirm("Apakah Anda yakin ingin menghapus modul ini?")) {
-                $(this).closest("tr").fadeOut();
+        // Delete Module Button
+        $(document).on('click', '.delete-btn', async function() {
+            const id = $(this).data('id');
+
+            if (confirm('Apakah Anda yakin ingin menghapus modul ini?\n\nPeringatan: Semua sub-modul di dalam modul ini juga akan terhapus!')) {
+                try {
+                    await db.collection('eduModules').doc(id).delete();
+                    alert('Modul berhasil dihapus!');
+                    loadModules();
+                } catch (error) {
+                    console.error('Error deleting module:', error);
+                    alert('Gagal menghapus modul: ' + error.message);
+                }
             }
         });
 
-        $(document).on('click', '.toggle-publish-btn', function() {
-            var $badge = $(this).closest("tr").find(".status-badge");
-            if($badge.hasClass("bg-success-focus")) {
-                $badge.removeClass("bg-success-focus text-success-600 border-success-main").addClass("bg-warning-focus text-warning-600 border-warning-main");
-                $badge.text("Draft");
-            } else {
-                $badge.removeClass("bg-warning-focus text-warning-600 border-warning-main").addClass("bg-success-focus text-success-600 border-success-main");
-                $badge.text("Published");
+        // Form Submit
+        document.getElementById('moduleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const saveBtn = document.getElementById('saveModuleBtn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+
+            const data = {
+                clusterId: document.getElementById('clusterId').value,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                estimatedTime: parseInt(document.getElementById('estimatedTime').value),
+                order: parseInt(document.getElementById('order').value),
+                isPublished: true
+            };
+
+            try {
+                if (currentEditId) {
+                    await db.collection('eduModules').doc(currentEditId).update(data);
+                    alert('Modul berhasil diupdate!');
+                } else {
+                    await db.collection('eduModules').add(data);
+                    alert('Modul berhasil ditambahkan!');
+                }
+
+                moduleModal.hide();
+                loadModules();
+            } catch (error) {
+                console.error('Error saving module:', error);
+                alert('Gagal menyimpan modul: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
             }
         });
 
-        $(document).on('click', '.edit-module-btn', function() {
-            var moduleId = $(this).data("module-id");
-            alert("Edit Modul ID: " + moduleId);
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadClusters();
+            loadModules();
         });
     </script>
 

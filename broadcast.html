@@ -126,7 +126,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="login.html">
+                                        <a class="dropdown-item text-black px-0 py-8 hover-bg-transparent hover-text-danger d-flex align-items-center gap-3" href="#" id="logoutBtn">
                                             <iconify-icon icon="lucide:power" class="icon text-xl"></iconify-icon> Keluar
                                         </a>
                                     </li>
@@ -365,38 +365,151 @@
     <script src="assets/js/lib/apexcharts.min.js"></script>
     <script src="assets/js/lib/dataTables.min.js"></script>
     <script src="assets/js/lib/iconify-icon.min.js"></script>
+
+    <!-- Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <!-- Auth Guard & Handler -->
+    <script src="assets/js/auth-guard.js"></script>
+    <script src="assets/js/auth-handler.js"></script>
+
     <script src="assets/js/app.js"></script>
 
     <script>
+        // Use global Firebase object
+        const db = window.firebaseDb;
 
-    // Send Broadcast
-    $("#sendBroadcastBtn").on("click", function(e) {
-        e.preventDefault();
+        // Load broadcast history from Firebase
+        async function loadBroadcasts() {
+            const tbody = $('tbody');
+            try {
+                const querySnapshot = await db.collection('broadcasts').orderBy('sentAt', 'desc').get();
 
-        var title = $("#broadcastTitle").val();
-        var body = $("#broadcastBody").val();
-        var target = $("#targetAudience").val();
+                const broadcasts = [];
+                querySnapshot.forEach((docSnap) => {
+                    broadcasts.push({ id: docSnap.id, ...docSnap.data() });
+                });
 
-        if(!title || !body || !target) {
-            alert("Mohon lengkapi semua field!");
-            return;
+                displayBroadcasts(broadcasts);
+            } catch (error) {
+                console.error('Error loading broadcasts:', error);
+                tbody.html('<tr><td colspan="6" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
+            }
         }
 
-        if(confirm("Apakah Anda yakin ingin mengirim notifikasi ini?")) {
-            alert("Notifikasi berhasil dikirim! (Demo Mode - Integrasi Firebase akan ditambahkan)");
-            // TODO: Add Firebase Cloud Messaging logic
-            $("#broadcastTitle").val("");
-            $("#broadcastBody").val("");
-            $("#targetAudience").val("");
+        function displayBroadcasts(broadcasts) {
+            const tbody = $('tbody');
+            if (broadcasts.length === 0) {
+                tbody.html('<tr><td colspan="6" class="text-center py-32"><p class="text-secondary-light">Belum ada riwayat broadcast.</p></td></tr>');
+                return;
+            }
+
+            tbody.html(broadcasts.map((broadcast, index) => {
+                const sentAt = broadcast.sentAt ? new Date(broadcast.sentAt.seconds * 1000).toLocaleString('id-ID') : '-';
+                const messagePreview = broadcast.message.length > 50 ? broadcast.message.substring(0, 50) + '...' : broadcast.message;
+
+                // Map target audience to Indonesian labels
+                const targetLabels = {
+                    'All': 'Semua',
+                    'Mayor': 'Mayor',
+                    'Minor': 'Minor',
+                    'beginner': 'Beginner',
+                    'warrior': 'Warrior',
+                    'champion': 'Champion',
+                    'hero': 'Hero'
+                };
+                const targetLabel = targetLabels[broadcast.targetAudience] || broadcast.targetAudience;
+
+                return `
+                <tr>
+                    <td class="text-center">${String(index + 1).padStart(2, '0')}</td>
+                    <td>
+                        <h6 class="text-sm mb-0 fw-semibold">${broadcast.title}</h6>
+                    </td>
+                    <td>
+                        <p class="text-sm text-secondary-light mb-0">${messagePreview}</p>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary-focus text-primary-600 px-12 py-6 radius-4 text-xs fw-medium">
+                            ${targetLabel}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <span class="text-primary-600 fw-semibold">${broadcast.recipientCount || '-'}</span>
+                    </td>
+                    <td>
+                        <span class="text-sm text-secondary-light">${sentAt}</span>
+                    </td>
+                </tr>
+                `;
+            }).join(''));
         }
-    });
 
-    // Character counter for body
-    $("#broadcastBody").on("input", function() {
-        var length = $(this).val().length;
-        $("#charCount").text(length + " / 500 karakter");
-    });
+        // Send Broadcast
+        $("#sendBroadcastBtn").on("click", async function(e) {
+            e.preventDefault();
 
+            var title = $("#broadcastTitle").val().trim();
+            var body = $("#broadcastBody").val().trim();
+            var target = $("#targetAudience").val();
+
+            if(!title || !body || !target) {
+                alert("Mohon lengkapi semua field!");
+                return;
+            }
+
+            if(confirm("Apakah Anda yakin ingin mengirim notifikasi ini?")) {
+                const btn = $(this);
+                const originalText = btn.html();
+                btn.prop('disabled', true);
+                btn.html('<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...');
+
+                try {
+                    const data = {
+                        title: title,
+                        message: body,
+                        targetAudience: target,
+                        status: 'sent',
+                        sentAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        recipientCount: 0
+                    };
+
+                    await db.collection('broadcasts').add(data);
+
+                    alert("Notifikasi berhasil dikirim!");
+
+                    // Reset form
+                    $("#broadcastTitle").val("");
+                    $("#broadcastBody").val("");
+                    $("#targetAudience").val("");
+                    $("#charCount").text("0 / 500 karakter");
+
+                    // Reload broadcast history
+                    loadBroadcasts();
+                } catch (error) {
+                    console.error('Error sending broadcast:', error);
+                    alert('Gagal mengirim notifikasi: ' + error.message);
+                } finally {
+                    btn.prop('disabled', false);
+                    btn.html(originalText);
+                }
+            }
+        });
+
+        // Character counter for body
+        $("#broadcastBody").on("input", function() {
+            var length = $(this).val().length;
+            $("#charCount").text(length + " / 500 karakter");
+        });
+
+        // Load broadcasts on page load
+        document.addEventListener('DOMContentLoaded', loadBroadcasts);
     </script>
 
 </body>

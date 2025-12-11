@@ -1,7 +1,7 @@
-<?php include './partials/footer.php' ?>
+<div data-include="./partials/footer.html"></div>
 </main>
 
-<?php include './partials/scripts.php' ?>
+<div data-include="./partials/scripts.html"></div>
 </body>
 
 </html>

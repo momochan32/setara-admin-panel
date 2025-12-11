@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 
-<?php include './partials/head.php' ?>
+<div data-include="./partials/head.html"></div>
 
 <body>
 
-    <?php include './partials/sidebar.php' ?>
+    <div data-include="./partials/sidebar.html"></div>
 
     <main class="dashboard-main">
-        <?php include './partials/navbar.php' ?>
+        <div data-include="./partials/navbar.html"></div>

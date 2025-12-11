@@ -26,5 +26,3 @@
 
     <!-- main js -->
     <script src="assets/js/app.js"></script>
-
-    <?php echo (isset($script) ? $script   : '')?>
