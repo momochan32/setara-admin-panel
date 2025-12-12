@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="assets/css/lib/apexcharts.css">
     <!-- Data Table css -->
     <link rel="stylesheet" href="assets/css/lib/dataTables.min.css">
+    <!-- Quill Editor CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <!-- main css -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -419,6 +421,12 @@
                                 <label for="title" class="form-label fw-semibold text-neutral-900">Judul Sub-Modul <span class="text-danger-600">*</span></label>
                                 <input type="text" class="form-control radius-8" id="title" placeholder="Contoh: Pengenalan Zat Besi" required>
                             </div>
+
+                            <div class="mb-20">
+                                <label class="form-label fw-semibold text-neutral-900">Konten Sub-Modul</label>
+                                <div id="quillEditor" style="height: 300px; background-color: white;"></div>
+                                <small class="text-secondary-light">Gunakan editor untuk membuat konten pembelajaran yang kaya</small>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary-600 radius-8" data-bs-dismiss="modal">Batal</button>
@@ -455,6 +463,8 @@
     <script src="assets/js/lib/dataTables.min.js"></script>
     <!-- Iconify Font js -->
     <script src="assets/js/lib/iconify-icon.min.js"></script>
+    <!-- Quill Editor JS -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
     <!-- Firebase CDN Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -478,6 +488,26 @@
 
         const contentModal = new bootstrap.Modal(document.getElementById('contentModal'));
         let currentEditId = null;
+
+        // Initialize Quill Editor
+        let quillEditor;
+        document.addEventListener('DOMContentLoaded', () => {
+            quillEditor = new Quill('#quillEditor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        ['link', 'image', 'video'],
+                        ['clean']
+                    ]
+                },
+                placeholder: 'Tulis konten pembelajaran di sini...'
+            });
+        });
 
         // Get module ID from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
@@ -528,7 +558,7 @@
             }
         }
 
-        // Load submodules from Firebase
+        // Load submodules from Firebase (Optimized)
         async function loadSubmodules() {
             const tbody = $('tbody');
             try {
@@ -545,26 +575,58 @@
 
                 const querySnapshot = await query.orderBy('order', 'asc').get();
 
-                const submodules = [];
-                for (const docSnap of querySnapshot.docs) {
+                // Collect unique module and cluster IDs
+                const moduleIds = new Set();
+                const clusterIds = new Set();
+
+                querySnapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    if (data.moduleId) {
+                        moduleIds.add(data.moduleId.id);
+                    }
+                    if (data.clusterId) {
+                        clusterIds.add(data.clusterId.id);
+                    }
+                });
+
+                // Batch load modules in parallel
+                const moduleMap = {};
+                await Promise.all(
+                    Array.from(moduleIds).map(async (moduleId) => {
+                        const moduleDoc = await db.collection('eduModules').doc(moduleId).get();
+                        if (moduleDoc.exists) {
+                            moduleMap[moduleId] = moduleDoc.data().title;
+                        }
+                    })
+                );
+
+                // Batch load clusters in parallel
+                const clusterMap = {};
+                await Promise.all(
+                    Array.from(clusterIds).map(async (clusterId) => {
+                        const clusterDoc = await db.collection('eduClusters').doc(clusterId).get();
+                        if (clusterDoc.exists) {
+                            clusterMap[clusterId] = clusterDoc.data().title;
+                        }
+                    })
+                );
+
+                // Build submodules array with cached data
+                const submodules = querySnapshot.docs.map(docSnap => {
                     const submoduleData = { id: docSnap.id, ...docSnap.data() };
 
-                    // Get module name for display
                     if (submoduleData.moduleId) {
-                        const moduleDoc = await submoduleData.moduleId.get();
-                        submoduleData.moduleName = moduleDoc.exists ? moduleDoc.data().title : 'Unknown';
+                        submoduleData.moduleName = moduleMap[submoduleData.moduleId.id] || 'Unknown';
                         submoduleData.moduleIdString = submoduleData.moduleId.id;
                     }
 
-                    // Get cluster name for display
                     if (submoduleData.clusterId) {
-                        const clusterDoc = await submoduleData.clusterId.get();
-                        submoduleData.clusterName = clusterDoc.exists ? clusterDoc.data().title : 'Unknown';
+                        submoduleData.clusterName = clusterMap[submoduleData.clusterId.id] || 'Unknown';
                         submoduleData.clusterIdString = submoduleData.clusterId.id;
                     }
 
-                    submodules.push(submoduleData);
-                }
+                    return submoduleData;
+                });
 
                 displaySubmodules(submodules);
                 updateStatistics(submodules);
@@ -626,6 +688,12 @@
             currentEditId = null;
             document.getElementById('contentModalLabel').textContent = 'Tambah Sub-Modul';
             document.getElementById('contentForm').reset();
+
+            // Clear Quill editor
+            if (quillEditor) {
+                quillEditor.setContents([]);
+            }
+
             contentModal.show();
         });
 
@@ -638,6 +706,19 @@
             document.getElementById('moduleId').value = item.moduleIdString || '';
             document.getElementById('title').value = item.title;
             document.getElementById('order').value = item.order;
+
+            // Load Quill content from deltaQuillContent field
+            if (quillEditor && item.deltaQuillContent) {
+                try {
+                    const delta = JSON.parse(item.deltaQuillContent);
+                    quillEditor.setContents(delta);
+                } catch (e) {
+                    console.error('Error loading Quill content:', e);
+                    quillEditor.setContents([]);
+                }
+            } else if (quillEditor) {
+                quillEditor.setContents([]);
+            }
 
             contentModal.show();
         });
@@ -687,11 +768,16 @@
                 console.error('Error getting module cluster:', error);
             }
 
+            // Get Quill Delta content as JSON string
+            const deltaContent = quillEditor.getContents();
+            const deltaQuillContent = JSON.stringify(deltaContent);
+
             const data = {
                 moduleId: db.collection('eduModules').doc(moduleIdValue),
                 clusterId: clusterRef,
                 title: document.getElementById('title').value,
-                order: parseInt(document.getElementById('order').value)
+                order: parseInt(document.getElementById('order').value),
+                deltaQuillContent: deltaQuillContent
             };
 
             try {
@@ -717,10 +803,10 @@
         });
 
         // Load data on page load
-        document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
             loadModules();
             loadSubmodules();
-        });
+        }, 100);
     </script>
 
 </body>

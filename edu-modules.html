@@ -372,7 +372,7 @@
             }
         }
 
-        // Load modules from Firebase
+        // Load modules from Firebase (Optimized)
         async function loadModules() {
             const tbody = $('#modulesTableBody');
             try {
@@ -389,27 +389,53 @@
 
                 const querySnapshot = await query.orderBy('order', 'asc').get();
 
-                const modules = [];
-                for (const docSnap of querySnapshot.docs) {
+                // Batch load all clusters first (instead of one by one)
+                const clusterIds = new Set();
+                querySnapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    if (data.clusterId) {
+                        clusterIds.add(data.clusterId.id);
+                    }
+                });
+
+                // Load all clusters in parallel
+                const clusterMap = {};
+                await Promise.all(
+                    Array.from(clusterIds).map(async (clusterId) => {
+                        const clusterDoc = await db.collection('eduClusters').doc(clusterId).get();
+                        if (clusterDoc.exists) {
+                            clusterMap[clusterId] = clusterDoc.data().title;
+                        }
+                    })
+                );
+
+                // Batch load all submodule counts
+                const moduleRefs = querySnapshot.docs.map(doc => db.collection('eduModules').doc(doc.id));
+                const submoduleCounts = {};
+
+                await Promise.all(
+                    moduleRefs.map(async (moduleRef) => {
+                        const submoduleSnapshot = await db.collection('eduSubmodules')
+                            .where('moduleId', '==', moduleRef)
+                            .where('isDeleted', '==', false)
+                            .get();
+                        submoduleCounts[moduleRef.id] = submoduleSnapshot.size;
+                    })
+                );
+
+                // Build modules array with cached data
+                const modules = querySnapshot.docs.map(docSnap => {
                     const moduleData = { id: docSnap.id, ...docSnap.data() };
 
-                    // Get cluster name for display
                     if (moduleData.clusterId) {
-                        const clusterDoc = await moduleData.clusterId.get();
-                        moduleData.clusterName = clusterDoc.exists ? clusterDoc.data().title : 'Unknown';
+                        moduleData.clusterName = clusterMap[moduleData.clusterId.id] || 'Unknown';
                         moduleData.clusterIdString = moduleData.clusterId.id;
                     }
 
-                    // Get submodule count (only non-deleted submodules)
-                    const moduleRef = db.collection('eduModules').doc(docSnap.id);
-                    const submoduleSnapshot = await db.collection('eduSubmodules')
-                        .where('moduleId', '==', moduleRef)
-                        .where('isDeleted', '==', false)
-                        .get();
-                    moduleData.submoduleCount = submoduleSnapshot.size;
+                    moduleData.submoduleCount = submoduleCounts[docSnap.id] || 0;
 
-                    modules.push(moduleData);
-                }
+                    return moduleData;
+                });
 
                 displayModules(modules);
                 updateStatistics(modules);
