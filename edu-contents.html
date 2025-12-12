@@ -200,7 +200,6 @@
                                 <tr>
                                     <th scope="col" class="text-center" width="60">No</th>
                                     <th scope="col">Judul Sub-Modul</th>
-                                    <th scope="col" class="text-center" width="120">Tipe Konten</th>
                                     <th scope="col" class="text-center" width="80">Urutan</th>
                                     <th scope="col" class="text-center" width="120">Status</th>
                                     <th scope="col" class="text-center" width="180">Aksi</th>
@@ -369,33 +368,15 @@
                         <div>
                             <h6 class="text-primary-600 mb-8">Tentang Sub-Modul</h6>
                             <p class="text-sm text-secondary-light mb-0">
-                                Sub-modul adalah unit konten terkecil dalam sistem edukasi SETARA. Setiap sub-modul dapat berupa artikel (HTML) atau video (URL YouTube).
-                                Klik <strong>"Edit Konten"</strong> untuk membuka editor dan mengelola konten.
+                                Sub-modul adalah unit konten terkecil dalam sistem edukasi SETARA.
+                                Klik <strong>"Edit Konten"</strong> untuk mengelola konten pembelajaran.
                             </p>
                         </div>
                     </div>
 
                     <!-- Content Statistics -->
                     <div class="row gy-3 mt-16">
-                        <div class="col-md-4">
-                            <div class="p-16 border radius-8 bg-primary-focus">
-                                <div class="d-flex align-items-center gap-2 mb-8">
-                                    <iconify-icon icon="solar:document-text-bold" class="text-primary-600 text-2xl"></iconify-icon>
-                                    <span class="text-sm text-secondary-light">Artikel</span>
-                                </div>
-                                <h4 class="mb-0 text-primary-600" id="articleCount">0</h4>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="p-16 border radius-8 bg-danger-focus">
-                                <div class="d-flex align-items-center gap-2 mb-8">
-                                    <iconify-icon icon="solar:videocamera-record-bold" class="text-danger-600 text-2xl"></iconify-icon>
-                                    <span class="text-sm text-secondary-light">Video</span>
-                                </div>
-                                <h4 class="mb-0 text-danger-600" id="videoCount">0</h4>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-12">
                             <div class="p-16 border radius-8 bg-success-focus">
                                 <div class="d-flex align-items-center gap-2 mb-8">
                                     <iconify-icon icon="solar:check-circle-bold" class="text-success-600 text-2xl"></iconify-icon>
@@ -437,46 +418,6 @@
                             <div class="mb-20">
                                 <label for="title" class="form-label fw-semibold text-neutral-900">Judul Sub-Modul <span class="text-danger-600">*</span></label>
                                 <input type="text" class="form-control radius-8" id="title" placeholder="Contoh: Pengenalan Zat Besi" required>
-                            </div>
-
-                            <div class="mb-20">
-                                <label class="form-label fw-semibold text-neutral-900 d-block mb-12">Tipe Konten <span class="text-danger-600">*</span></label>
-                                <div class="d-flex gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="contentType" id="typeArticle" value="article" checked>
-                                        <label class="form-check-label" for="typeArticle">
-                                            <iconify-icon icon="solar:document-text-bold" class="text-primary-600"></iconify-icon>
-                                            Artikel (HTML)
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="contentType" id="typeVideo" value="video">
-                                        <label class="form-check-label" for="typeVideo">
-                                            <iconify-icon icon="solar:videocamera-record-bold" class="text-danger-600"></iconify-icon>
-                                            Video (URL)
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Article Content (Show by default) -->
-                            <div id="articleContent" class="mb-20">
-                                <label for="contentHTML" class="form-label fw-semibold text-neutral-900">Konten Artikel (HTML) <span class="text-danger-600">*</span></label>
-                                <textarea class="form-control radius-8" id="contentHTML" rows="12" placeholder="<h3>Judul Artikel</h3><p>Konten artikel dalam format HTML...</p>"></textarea>
-                                <small class="text-secondary-light">
-                                    <iconify-icon icon="mdi:information-outline" class="text-info-600"></iconify-icon>
-                                    Gunakan format HTML untuk styling. Contoh: &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;strong&gt;, dll.
-                                </small>
-                            </div>
-
-                            <!-- Video Content (Hidden by default) -->
-                            <div id="videoContent" class="mb-20" style="display: none;">
-                                <label for="videoURL" class="form-label fw-semibold text-neutral-900">URL Video <span class="text-danger-600">*</span></label>
-                                <input type="url" class="form-control radius-8" id="videoURL" placeholder="https://www.youtube.com/watch?v=...">
-                                <small class="text-secondary-light">
-                                    <iconify-icon icon="mdi:information-outline" class="text-info-600"></iconify-icon>
-                                    Masukkan URL video YouTube atau video hosting lainnya
-                                </small>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -591,7 +532,7 @@
         async function loadSubmodules() {
             const tbody = $('tbody');
             try {
-                tbody.html('<tr><td colspan="6" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
+                tbody.html('<tr><td colspan="5" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
 
                 let query = db.collection('eduSubmodules')
                     .where('isDeleted', '==', false);
@@ -629,53 +570,33 @@
                 updateStatistics(submodules);
             } catch (error) {
                 console.error('Error loading submodules:', error);
-                tbody.html('<tr><td colspan="6" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
+                tbody.html('<tr><td colspan="5" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
             }
         }
 
         // Update statistics based on submodules data
         function updateStatistics(submodules) {
-            // Count articles and videos
-            const articleCount = submodules.filter(s => s.contentType === 'article').length;
-            const videoCount = submodules.filter(s => s.contentType === 'video').length;
             const totalCount = submodules.length;
 
             // Update UI
-            document.getElementById('articleCount').textContent = articleCount;
-            document.getElementById('videoCount').textContent = videoCount;
             document.getElementById('totalCount').textContent = totalCount;
         }
 
         function displaySubmodules(submodules) {
             const tbody = $('tbody');
             if (submodules.length === 0) {
-                tbody.html('<tr><td colspan="6" class="text-center py-32"><p class="text-secondary-light">Belum ada sub-modul. Klik tombol "Tambah Konten" untuk mulai.</p></td></tr>');
+                tbody.html('<tr><td colspan="5" class="text-center py-32"><p class="text-secondary-light">Belum ada sub-modul. Klik tombol "Tambah Konten" untuk mulai.</p></td></tr>');
                 return;
             }
 
             tbody.html(submodules.map((item, index) => {
-                const isArticle = item.contentType === 'article';
-                const iconClass = isArticle ? 'solar:document-text-bold' : 'solar:videocamera-record-bold';
-                const iconColor = isArticle ? 'text-primary-600' : 'text-danger-600';
-                const badgeClass = isArticle ? 'bg-primary-focus text-primary-600' : 'bg-danger-focus text-danger-600';
-                const badgeIcon = isArticle ? 'solar:document-text-outline' : 'solar:play-circle-outline';
-
                 return `
                 <tr>
                     <td class="text-center">
                         <span class="text-secondary-light fw-medium">${String(index + 1).padStart(2, '0')}</span>
                     </td>
                     <td>
-                        <div class="d-flex align-items-center gap-2">
-                            <iconify-icon icon="${iconClass}" class="${iconColor} text-xl"></iconify-icon>
-                            <h6 class="text-md mb-0 fw-semibold">${item.title}</h6>
-                        </div>
-                    </td>
-                    <td class="text-center">
-                        <span class="badge ${badgeClass} px-16 py-6 radius-4 fw-medium text-sm">
-                            <iconify-icon icon="${badgeIcon}" class="icon"></iconify-icon>
-                            ${isArticle ? 'Artikel' : 'Video'}
-                        </span>
+                        <h6 class="text-md mb-0 fw-semibold">${item.title}</h6>
                     </td>
                     <td class="text-center">
                         <span class="badge bg-neutral-200 text-neutral-900 px-16 py-6 radius-4 fw-semibold">
@@ -705,8 +626,6 @@
             currentEditId = null;
             document.getElementById('contentModalLabel').textContent = 'Tambah Sub-Modul';
             document.getElementById('contentForm').reset();
-            document.getElementById('articleContent').style.display = 'block';
-            document.getElementById('videoContent').style.display = 'none';
             contentModal.show();
         });
 
@@ -719,18 +638,6 @@
             document.getElementById('moduleId').value = item.moduleIdString || '';
             document.getElementById('title').value = item.title;
             document.getElementById('order').value = item.order;
-
-            if (item.contentType === 'article') {
-                document.getElementById('typeArticle').checked = true;
-                document.getElementById('contentHTML').value = item.contentHTML || '';
-                document.getElementById('articleContent').style.display = 'block';
-                document.getElementById('videoContent').style.display = 'none';
-            } else {
-                document.getElementById('typeVideo').checked = true;
-                document.getElementById('videoURL').value = item.videoURL || '';
-                document.getElementById('articleContent').style.display = 'none';
-                document.getElementById('videoContent').style.display = 'block';
-            }
 
             contentModal.show();
         });
@@ -752,17 +659,6 @@
             }
         });
 
-        // Toggle content type fields
-        $("input[name=contentType]").on("change", function() {
-            if($(this).val() === "article") {
-                $("#articleContent").slideDown();
-                $("#videoContent").slideUp();
-            } else {
-                $("#articleContent").slideUp();
-                $("#videoContent").slideDown();
-            }
-        });
-
         // Form Submit
         document.getElementById('contentForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -780,8 +676,6 @@
                 return;
             }
 
-            const contentType = document.querySelector('input[name="contentType"]:checked').value;
-
             // Get the cluster reference from the selected module
             let clusterRef = null;
             try {
@@ -797,21 +691,8 @@
                 moduleId: db.collection('eduModules').doc(moduleIdValue),
                 clusterId: clusterRef,
                 title: document.getElementById('title').value,
-                deltaQuillContent: contentType === 'article' ? document.getElementById('contentHTML').value : '',
                 order: parseInt(document.getElementById('order').value)
             };
-
-            // Keep old field names for backward compatibility
-            if (contentType === 'article') {
-                data.contentHTML = document.getElementById('contentHTML').value;
-                data.contentType = 'article';
-                data.videoURL = '';
-            } else {
-                data.videoURL = document.getElementById('videoURL').value;
-                data.contentType = 'video';
-                data.contentHTML = '';
-                data.deltaQuillContent = '';
-            }
 
             try {
                 if (currentEditId) {
