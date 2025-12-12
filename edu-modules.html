@@ -194,7 +194,6 @@
                         <tr>
                             <th scope="col" class="text-center" width="60">No</th>
                             <th scope="col">Judul Modul</th>
-                            <th scope="col">Deskripsi</th>
                             <th scope="col" class="text-center" width="120">Waktu (Menit)</th>
                             <th scope="col" class="text-center" width="80">Urutan</th>
                             <th scope="col" class="text-center" width="100">Sub-Modul</th>
@@ -284,11 +283,6 @@
                         <div class="mb-20">
                             <label for="title" class="form-label fw-semibold text-neutral-900">Judul Modul <span class="text-danger-600">*</span></label>
                             <input type="text" class="form-control radius-8" id="title" placeholder="contoh: Makanan Tinggi Zat Besi" required>
-                        </div>
-
-                        <div class="mb-20">
-                            <label for="description" class="form-label fw-semibold text-neutral-900">Deskripsi <span class="text-danger-600">*</span></label>
-                            <textarea class="form-control radius-8" id="description" rows="3" placeholder="Deskripsi singkat tentang modul ini..." required></textarea>
                         </div>
 
                         <div class="mb-20">
@@ -382,7 +376,7 @@
         async function loadModules() {
             const tbody = $('#modulesTableBody');
             try {
-                tbody.html('<tr><td colspan="8" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
+                tbody.html('<tr><td colspan="7" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
 
                 let query = db.collection('eduModules')
                     .where('isDeleted', '==', false);
@@ -421,7 +415,7 @@
                 updateStatistics(modules);
             } catch (error) {
                 console.error('Error loading modules:', error);
-                tbody.html('<tr><td colspan="8" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
+                tbody.html('<tr><td colspan="7" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
             }
         }
 
@@ -447,7 +441,7 @@
         function displayModules(modules) {
             const tbody = $('#modulesTableBody');
             if (modules.length === 0) {
-                tbody.html('<tr><td colspan="8" class="text-center py-32"><p class="text-secondary-light">Belum ada modul. Klik tombol "Tambah Modul" untuk mulai.</p></td></tr>');
+                tbody.html('<tr><td colspan="7" class="text-center py-32"><p class="text-secondary-light">Belum ada modul. Klik tombol "Tambah Modul" untuk mulai.</p></td></tr>');
                 return;
             }
 
@@ -459,13 +453,10 @@
                     <td>
                         <h6 class="text-md mb-0 fw-semibold">${module.title}</h6>
                     </td>
-                    <td>
-                        <p class="text-sm text-secondary-light mb-0">${module.description}</p>
-                    </td>
                     <td class="text-center">
                         <span class="badge bg-info-focus text-info-600 px-12 py-4 radius-4 fw-medium text-sm">
                             <iconify-icon icon="solar:clock-circle-outline" class="icon"></iconify-icon>
-                            ${module.estimatedTime}
+                            ${module.estimatedTime} Min
                         </span>
                     </td>
                     <td class="text-center">
@@ -514,7 +505,6 @@
             document.getElementById('moduleModalLabel').textContent = 'Edit Modul';
             document.getElementById('clusterId').value = module.clusterIdString || '';
             document.getElementById('title').value = module.title;
-            document.getElementById('description').value = module.description;
             document.getElementById('estimatedTime').value = module.estimatedTime;
             document.getElementById('order').value = module.order;
 
@@ -572,7 +562,6 @@
             const data = {
                 clusterId: db.collection('eduClusters').doc(clusterIdValue),
                 title: document.getElementById('title').value,
-                description: document.getElementById('description').value,
                 estimatedTime: parseInt(document.getElementById('estimatedTime').value),
                 order: parseInt(document.getElementById('order').value),
                 isPublished: true
