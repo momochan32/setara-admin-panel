@@ -344,16 +344,35 @@
         const moduleModal = new bootstrap.Modal(document.getElementById('moduleModal'));
         let currentEditId = null;
 
+        // Get cluster ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedClusterId = urlParams.get('cluster_id');
+        let selectedClusterName = '';
+
         // Load clusters for dropdown
         async function loadClusters() {
             try {
-                const querySnapshot = await db.collection('eduClusters').orderBy('order', 'asc').get();
+                const querySnapshot = await db.collection('eduClusters')
+                    .where('isDeleted', '==', false)
+                    .orderBy('order', 'asc')
+                    .get();
                 const select = document.getElementById('clusterId');
                 select.innerHTML = '<option value="">-- Pilih Klaster --</option>';
                 querySnapshot.forEach((doc) => {
                     const cluster = doc.data();
-                    select.innerHTML += `<option value="${doc.id}">${cluster.title}</option>`;
+                    const isSelected = selectedClusterId === doc.id ? 'selected' : '';
+                    select.innerHTML += `<option value="${doc.id}" ${isSelected}>${cluster.title}</option>`;
+
+                    // Store cluster name for display
+                    if (selectedClusterId === doc.id) {
+                        selectedClusterName = cluster.title;
+                    }
                 });
+
+                // Update page header if cluster is selected
+                if (selectedClusterId && selectedClusterName) {
+                    document.querySelector('.card-header h6').textContent = `Modul: ${selectedClusterName}`;
+                }
             } catch (error) {
                 console.error('Error loading clusters:', error);
             }
@@ -365,14 +384,34 @@
             try {
                 tbody.html('<tr><td colspan="8" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
 
-                const querySnapshot = await db.collection('eduModules').orderBy('order', 'asc').get();
+                let query = db.collection('eduModules')
+                    .where('isDeleted', '==', false);
+
+                // Filter by cluster if cluster_id is in URL
+                if (selectedClusterId) {
+                    const clusterRef = db.collection('eduClusters').doc(selectedClusterId);
+                    query = query.where('clusterId', '==', clusterRef);
+                }
+
+                const querySnapshot = await query.orderBy('order', 'asc').get();
 
                 const modules = [];
                 for (const docSnap of querySnapshot.docs) {
                     const moduleData = { id: docSnap.id, ...docSnap.data() };
 
-                    // Get submodule count
-                    const submoduleSnapshot = await db.collection('eduSubmodules').where('moduleId', '==', docSnap.id).get();
+                    // Get cluster name for display
+                    if (moduleData.clusterId) {
+                        const clusterDoc = await moduleData.clusterId.get();
+                        moduleData.clusterName = clusterDoc.exists ? clusterDoc.data().title : 'Unknown';
+                        moduleData.clusterIdString = moduleData.clusterId.id;
+                    }
+
+                    // Get submodule count (only non-deleted submodules)
+                    const moduleRef = db.collection('eduModules').doc(docSnap.id);
+                    const submoduleSnapshot = await db.collection('eduSubmodules')
+                        .where('moduleId', '==', moduleRef)
+                        .where('isDeleted', '==', false)
+                        .get();
                     moduleData.submoduleCount = submoduleSnapshot.size;
 
                     modules.push(moduleData);
@@ -473,7 +512,7 @@
             currentEditId = module.id;
 
             document.getElementById('moduleModalLabel').textContent = 'Edit Modul';
-            document.getElementById('clusterId').value = module.clusterId;
+            document.getElementById('clusterId').value = module.clusterIdString || '';
             document.getElementById('title').value = module.title;
             document.getElementById('description').value = module.description;
             document.getElementById('estimatedTime').value = module.estimatedTime;
@@ -482,13 +521,28 @@
             moduleModal.show();
         });
 
-        // Delete Module Button
+        // Delete Module Button (Soft Delete)
         $(document).on('click', '.delete-btn', async function() {
             const id = $(this).data('id');
 
-            if (confirm('Apakah Anda yakin ingin menghapus modul ini?\n\nPeringatan: Semua sub-modul di dalam modul ini juga akan terhapus!')) {
+            if (confirm('Apakah Anda yakin ingin menghapus modul ini?\n\nPeringatan: Semua sub-modul di dalam modul ini juga akan ditandai sebagai terhapus!')) {
                 try {
-                    await db.collection('eduModules').doc(id).delete();
+                    const batch = db.batch();
+                    const moduleRef = db.collection('eduModules').doc(id);
+
+                    // Soft delete module
+                    batch.update(moduleRef, { isDeleted: true });
+
+                    // Soft delete all submodules in this module
+                    const submodulesSnapshot = await db.collection('eduSubmodules')
+                        .where('moduleId', '==', moduleRef)
+                        .get();
+
+                    submodulesSnapshot.forEach((submoduleDoc) => {
+                        batch.update(submoduleDoc.ref, { isDeleted: true });
+                    });
+
+                    await batch.commit();
                     alert('Modul berhasil dihapus!');
                     loadModules();
                 } catch (error) {
@@ -507,8 +561,16 @@
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
 
+            const clusterIdValue = document.getElementById('clusterId').value;
+            if (!clusterIdValue) {
+                alert('Silakan pilih klaster terlebih dahulu!');
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+                return;
+            }
+
             const data = {
-                clusterId: document.getElementById('clusterId').value,
+                clusterId: db.collection('eduClusters').doc(clusterIdValue),
                 title: document.getElementById('title').value,
                 description: document.getElementById('description').value,
                 estimatedTime: parseInt(document.getElementById('estimatedTime').value),
@@ -521,6 +583,8 @@
                     await db.collection('eduModules').doc(currentEditId).update(data);
                     alert('Modul berhasil diupdate!');
                 } else {
+                    // Add new module with isDeleted = false
+                    data.isDeleted = false;
                     await db.collection('eduModules').add(data);
                     alert('Modul berhasil ditambahkan!');
                 }

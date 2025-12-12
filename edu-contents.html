@@ -538,16 +538,50 @@
         const contentModal = new bootstrap.Modal(document.getElementById('contentModal'));
         let currentEditId = null;
 
+        // Get module ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedModuleId = urlParams.get('module_id');
+        let selectedModuleName = '';
+        let selectedClusterId = '';
+
         // Load modules for dropdown
         async function loadModules() {
             try {
-                const querySnapshot = await db.collection('eduModules').orderBy('order', 'asc').get();
+                const querySnapshot = await db.collection('eduModules')
+                    .where('isDeleted', '==', false)
+                    .orderBy('order', 'asc')
+                    .get();
                 const select = document.getElementById('moduleId');
                 select.innerHTML = '<option value="">-- Pilih Modul --</option>';
-                querySnapshot.forEach((doc) => {
+
+                for (const doc of querySnapshot.docs) {
                     const module = doc.data();
-                    select.innerHTML += `<option value="${doc.id}">${module.title}</option>`;
-                });
+                    const isSelected = selectedModuleId === doc.id ? 'selected' : '';
+
+                    // Get cluster name
+                    let clusterName = '';
+                    if (module.clusterId) {
+                        const clusterDoc = await module.clusterId.get();
+                        clusterName = clusterDoc.exists ? ` (${clusterDoc.data().title})` : '';
+
+                        // Store cluster ID for the selected module
+                        if (selectedModuleId === doc.id && clusterDoc.exists) {
+                            selectedClusterId = clusterDoc.id;
+                        }
+                    }
+
+                    select.innerHTML += `<option value="${doc.id}" ${isSelected}>${module.title}${clusterName}</option>`;
+
+                    // Store module name for display
+                    if (selectedModuleId === doc.id) {
+                        selectedModuleName = module.title;
+                    }
+                }
+
+                // Update page header if module is selected
+                if (selectedModuleId && selectedModuleName) {
+                    document.querySelector('.card-header h6').textContent = `Sub-Modul: ${selectedModuleName}`;
+                }
             } catch (error) {
                 console.error('Error loading modules:', error);
             }
@@ -559,12 +593,37 @@
             try {
                 tbody.html('<tr><td colspan="6" class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></td></tr>');
 
-                const querySnapshot = await db.collection('eduSubmodules').orderBy('order', 'asc').get();
+                let query = db.collection('eduSubmodules')
+                    .where('isDeleted', '==', false);
+
+                // Filter by module if module_id is in URL
+                if (selectedModuleId) {
+                    const moduleRef = db.collection('eduModules').doc(selectedModuleId);
+                    query = query.where('moduleId', '==', moduleRef);
+                }
+
+                const querySnapshot = await query.orderBy('order', 'asc').get();
 
                 const submodules = [];
-                querySnapshot.forEach((docSnap) => {
-                    submodules.push({ id: docSnap.id, ...docSnap.data() });
-                });
+                for (const docSnap of querySnapshot.docs) {
+                    const submoduleData = { id: docSnap.id, ...docSnap.data() };
+
+                    // Get module name for display
+                    if (submoduleData.moduleId) {
+                        const moduleDoc = await submoduleData.moduleId.get();
+                        submoduleData.moduleName = moduleDoc.exists ? moduleDoc.data().title : 'Unknown';
+                        submoduleData.moduleIdString = submoduleData.moduleId.id;
+                    }
+
+                    // Get cluster name for display
+                    if (submoduleData.clusterId) {
+                        const clusterDoc = await submoduleData.clusterId.get();
+                        submoduleData.clusterName = clusterDoc.exists ? clusterDoc.data().title : 'Unknown';
+                        submoduleData.clusterIdString = submoduleData.clusterId.id;
+                    }
+
+                    submodules.push(submoduleData);
+                }
 
                 displaySubmodules(submodules);
                 updateStatistics(submodules);
@@ -657,7 +716,7 @@
             currentEditId = item.id;
 
             document.getElementById('contentModalLabel').textContent = 'Edit Sub-Modul';
-            document.getElementById('moduleId').value = item.moduleId;
+            document.getElementById('moduleId').value = item.moduleIdString || '';
             document.getElementById('title').value = item.title;
             document.getElementById('order').value = item.order;
 
@@ -676,13 +735,14 @@
             contentModal.show();
         });
 
-        // Delete Content Button
+        // Delete Content Button (Soft Delete)
         $(document).on('click', '.delete-btn', async function() {
             const id = $(this).data('id');
 
             if (confirm('Apakah Anda yakin ingin menghapus sub-modul ini?')) {
                 try {
-                    await db.collection('eduSubmodules').doc(id).delete();
+                    // Soft delete submodule
+                    await db.collection('eduSubmodules').doc(id).update({ isDeleted: true });
                     alert('Sub-modul berhasil dihapus!');
                     loadSubmodules();
                 } catch (error) {
@@ -712,20 +772,45 @@
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
 
+            const moduleIdValue = document.getElementById('moduleId').value;
+            if (!moduleIdValue) {
+                alert('Silakan pilih modul terlebih dahulu!');
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+                return;
+            }
+
             const contentType = document.querySelector('input[name="contentType"]:checked').value;
+
+            // Get the cluster reference from the selected module
+            let clusterRef = null;
+            try {
+                const moduleDoc = await db.collection('eduModules').doc(moduleIdValue).get();
+                if (moduleDoc.exists && moduleDoc.data().clusterId) {
+                    clusterRef = moduleDoc.data().clusterId;
+                }
+            } catch (error) {
+                console.error('Error getting module cluster:', error);
+            }
+
             const data = {
-                moduleId: document.getElementById('moduleId').value,
+                moduleId: db.collection('eduModules').doc(moduleIdValue),
+                clusterId: clusterRef,
                 title: document.getElementById('title').value,
-                contentType: contentType,
+                deltaQuillContent: contentType === 'article' ? document.getElementById('contentHTML').value : '',
                 order: parseInt(document.getElementById('order').value)
             };
 
+            // Keep old field names for backward compatibility
             if (contentType === 'article') {
                 data.contentHTML = document.getElementById('contentHTML').value;
+                data.contentType = 'article';
                 data.videoURL = '';
             } else {
                 data.videoURL = document.getElementById('videoURL').value;
+                data.contentType = 'video';
                 data.contentHTML = '';
+                data.deltaQuillContent = '';
             }
 
             try {
@@ -733,6 +818,8 @@
                     await db.collection('eduSubmodules').doc(currentEditId).update(data);
                     alert('Sub-modul berhasil diupdate!');
                 } else {
+                    // Add new submodule with isDeleted = false
+                    data.isDeleted = false;
                     await db.collection('eduSubmodules').add(data);
                     alert('Sub-modul berhasil ditambahkan!');
                 }

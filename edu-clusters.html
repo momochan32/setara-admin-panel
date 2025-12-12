@@ -312,14 +312,21 @@
             try {
                 container.html('<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
 
-                const querySnapshot = await db.collection('eduClusters').orderBy('order', 'asc').get();
+                const querySnapshot = await db.collection('eduClusters')
+                    .where('isDeleted', '==', false)
+                    .orderBy('order', 'asc')
+                    .get();
 
                 const clusters = [];
                 for (const docSnap of querySnapshot.docs) {
                     const clusterData = { id: docSnap.id, ...docSnap.data() };
 
-                    // Get module count
-                    const moduleSnapshot = await db.collection('eduModules').where('clusterId', '==', docSnap.id).get();
+                    // Get module count (only non-deleted modules)
+                    const clusterRef = db.collection('eduClusters').doc(docSnap.id);
+                    const moduleSnapshot = await db.collection('eduModules')
+                        .where('clusterId', '==', clusterRef)
+                        .where('isDeleted', '==', false)
+                        .get();
                     clusterData.moduleCount = moduleSnapshot.size;
 
                     clusters.push(clusterData);
@@ -409,14 +416,38 @@
             clusterModal.show();
         });
 
-        // Delete Cluster Button
+        // Delete Cluster Button (Soft Delete)
         $(document).on('click', '.delete-cluster-btn', async function() {
             const clusterId = $(this).data('cluster-id');
             const title = $(this).data('title');
 
-            if (confirm(`Apakah Anda yakin ingin menghapus klaster "${title}"?\n\nPeringatan: Semua modul di dalam klaster ini juga akan terhapus!`)) {
+            if (confirm(`Apakah Anda yakin ingin menghapus klaster "${title}"?\n\nPeringatan: Semua modul di dalam klaster ini juga akan ditandai sebagai terhapus!`)) {
                 try {
-                    await db.collection('eduClusters').doc(clusterId).delete();
+                    const batch = db.batch();
+                    const clusterRef = db.collection('eduClusters').doc(clusterId);
+
+                    // Soft delete cluster
+                    batch.update(clusterRef, { isDeleted: true });
+
+                    // Soft delete all modules in this cluster
+                    const modulesSnapshot = await db.collection('eduModules')
+                        .where('clusterId', '==', clusterRef)
+                        .get();
+
+                    for (const moduleDoc of modulesSnapshot.docs) {
+                        batch.update(moduleDoc.ref, { isDeleted: true });
+
+                        // Soft delete all submodules in this module
+                        const submodulesSnapshot = await db.collection('eduSubmodules')
+                            .where('moduleId', '==', moduleDoc.ref)
+                            .get();
+
+                        submodulesSnapshot.forEach((submoduleDoc) => {
+                            batch.update(submoduleDoc.ref, { isDeleted: true });
+                        });
+                    }
+
+                    await batch.commit();
                     alert('Klaster berhasil dihapus!');
                     loadClusters();
                 } catch (error) {
@@ -449,7 +480,8 @@
                     await db.collection('eduClusters').doc(currentEditId).update(data);
                     alert('Klaster berhasil diupdate!');
                 } else {
-                    // Add new cluster
+                    // Add new cluster with isDeleted = false
+                    data.isDeleted = false;
                     await db.collection('eduClusters').add(data);
                     alert('Klaster berhasil ditambahkan!');
                 }
