@@ -17,6 +17,16 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <!-- main css -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Quill Editor Custom Height with Scroll */
+        #quillEditor .ql-container {
+            height: 240px;
+            overflow-y: auto;
+        }
+        #quillEditor .ql-editor {
+            min-height: 240px;
+        }
+    </style>
 </head>
 
 <body>
@@ -196,6 +206,23 @@
                 </div>
 
                 <div class="card-body p-24">
+                    <!-- Pagination Controls Top -->
+                    <div class="d-flex justify-content-between align-items-center mb-16">
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="text-sm text-secondary-light">Show:</label>
+                            <select id="itemsPerPageContent" class="form-select form-select-sm" style="width: auto;">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                            <span class="text-sm text-secondary-light">entries</span>
+                        </div>
+                        <div>
+                            <span class="text-sm text-secondary-light" id="tableInfoContent">Showing 0 to 0 of 0 entries</span>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table bordered-table mb-0">
                             <thead>
@@ -207,161 +234,22 @@
                                     <th scope="col" class="text-center" width="180">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-center">
-                                        <span class="text-secondary-light fw-medium">01</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <iconify-icon icon="solar:document-text-bold" class="text-primary-600 text-xl"></iconify-icon>
-                                            <h6 class="text-md mb-0 fw-semibold">Pengenalan Zat Besi</h6>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-primary-focus text-primary-600 px-16 py-6 radius-4 fw-medium text-sm">
-                                            <iconify-icon icon="solar:document-text-outline" class="icon"></iconify-icon>
-                                            Artikel
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-neutral-200 text-neutral-900 px-16 py-6 radius-4 fw-semibold">
-                                            1
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="bg-success-focus text-success-600 border border-success-main px-16 py-4 radius-4 fw-medium text-sm">Published</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex align-items-center gap-8 justify-content-center">
-                                            <button type="button" class="edit-content-btn bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-content-id="1" title="Edit Konten">
-                                                <iconify-icon icon="lucide:edit" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" title="Preview">
-                                                <iconify-icon icon="solar:eye-outline" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="delete-content-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-content-id="1" title="Hapus">
-                                                <iconify-icon icon="fluent:delete-24-regular" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">
-                                        <span class="text-secondary-light fw-medium">02</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <iconify-icon icon="solar:document-text-bold" class="text-primary-600 text-xl"></iconify-icon>
-                                            <h6 class="text-md mb-0 fw-semibold">Daftar Sayuran Kaya Zat Besi</h6>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-primary-focus text-primary-600 px-16 py-6 radius-4 fw-medium text-sm">
-                                            <iconify-icon icon="solar:document-text-outline" class="icon"></iconify-icon>
-                                            Artikel
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-neutral-200 text-neutral-900 px-16 py-6 radius-4 fw-semibold">
-                                            2
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="bg-success-focus text-success-600 border border-success-main px-16 py-4 radius-4 fw-medium text-sm">Published</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex align-items-center gap-8 justify-content-center">
-                                            <button type="button" class="edit-content-btn bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-content-id="2" title="Edit Konten">
-                                                <iconify-icon icon="lucide:edit" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" title="Preview">
-                                                <iconify-icon icon="solar:eye-outline" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="delete-content-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-content-id="2" title="Hapus">
-                                                <iconify-icon icon="fluent:delete-24-regular" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">
-                                        <span class="text-secondary-light fw-medium">03</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <iconify-icon icon="solar:videocamera-record-bold" class="text-danger-600 text-xl"></iconify-icon>
-                                            <h6 class="text-md mb-0 fw-semibold">Video: Cara Mengolah Sayuran</h6>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-danger-focus text-danger-600 px-16 py-6 radius-4 fw-medium text-sm">
-                                            <iconify-icon icon="solar:play-circle-outline" class="icon"></iconify-icon>
-                                            Video
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-neutral-200 text-neutral-900 px-16 py-6 radius-4 fw-semibold">
-                                            3
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="bg-success-focus text-success-600 border border-success-main px-16 py-4 radius-4 fw-medium text-sm">Published</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex align-items-center gap-8 justify-content-center">
-                                            <button type="button" class="edit-content-btn bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-content-id="3" title="Edit Konten">
-                                                <iconify-icon icon="lucide:edit" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" title="Preview">
-                                                <iconify-icon icon="solar:eye-outline" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="delete-content-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-content-id="3" title="Hapus">
-                                                <iconify-icon icon="fluent:delete-24-regular" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-center">
-                                        <span class="text-secondary-light fw-medium">04</span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <iconify-icon icon="solar:document-text-bold" class="text-primary-600 text-xl"></iconify-icon>
-                                            <h6 class="text-md mb-0 fw-semibold">Buah-buahan untuk Penderita Thalassemia</h6>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-primary-focus text-primary-600 px-16 py-6 radius-4 fw-medium text-sm">
-                                            <iconify-icon icon="solar:document-text-outline" class="icon"></iconify-icon>
-                                            Artikel
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge bg-neutral-200 text-neutral-900 px-16 py-6 radius-4 fw-semibold">
-                                            4
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="bg-warning-focus text-warning-600 border border-warning-main px-16 py-4 radius-4 fw-medium text-sm">Draft</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex align-items-center gap-8 justify-content-center">
-                                            <button type="button" class="edit-content-btn bg-success-focus text-success-600 bg-hover-success-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-content-id="4" title="Edit Konten">
-                                                <iconify-icon icon="lucide:edit" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="bg-info-focus text-info-600 bg-hover-info-200 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" title="Preview">
-                                                <iconify-icon icon="solar:eye-outline" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="delete-content-btn bg-danger-focus bg-hover-danger-200 text-danger-600 fw-medium w-36-px h-36-px d-flex justify-content-center align-items-center rounded-circle" data-content-id="4" title="Hapus">
-                                                <iconify-icon icon="fluent:delete-24-regular" class="icon text-lg"></iconify-icon>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tbody id="submodulesTableBody">
+                                <!-- Submodules will be loaded here -->
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Pagination Controls Bottom -->
+                    <div class="d-flex justify-content-between align-items-center mt-16">
+                        <div>
+                            <span class="text-sm text-secondary-light" id="tableInfoContentBottom">Showing 0 to 0 of 0 entries</span>
+                        </div>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0" id="paginationContent">
+                                <!-- Pagination buttons will be generated here -->
+                            </ul>
+                        </nav>
                     </div>
 
                     <!-- Info Card -->
@@ -424,7 +312,7 @@
 
                             <div class="mb-20">
                                 <label class="form-label fw-semibold text-neutral-900">Konten Sub-Modul</label>
-                                <div id="quillEditor" style="height: 300px; background-color: white;"></div>
+                                <div id="quillEditor" style="height: 240px; background-color: white;"></div>
                                 <small class="text-secondary-light">Gunakan editor untuk membuat konten pembelajaran yang kaya</small>
                             </div>
                         </div>
@@ -488,6 +376,11 @@
 
         const contentModal = new bootstrap.Modal(document.getElementById('contentModal'));
         let currentEditId = null;
+
+        // Pagination variables
+        let allSubmodules = [];
+        let currentPageContent = 1;
+        let itemsPerPageContent = 10;
 
         // Initialize Quill Editor
         let quillEditor;
@@ -612,7 +505,7 @@
                 );
 
                 // Build submodules array with cached data
-                const submodules = querySnapshot.docs.map(docSnap => {
+                allSubmodules = querySnapshot.docs.map(docSnap => {
                     const submoduleData = { id: docSnap.id, ...docSnap.data() };
 
                     if (submoduleData.moduleId) {
@@ -628,12 +521,82 @@
                     return submoduleData;
                 });
 
-                displaySubmodules(submodules);
-                updateStatistics(submodules);
+                updateStatistics(allSubmodules);
+                renderPaginatedSubmodules();
             } catch (error) {
                 console.error('Error loading submodules:', error);
                 tbody.html('<tr><td colspan="5" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
             }
+        }
+
+        // Render paginated submodules
+        function renderPaginatedSubmodules() {
+            const startIndex = (currentPageContent - 1) * itemsPerPageContent;
+            const endIndex = startIndex + itemsPerPageContent;
+            const paginatedSubmodules = allSubmodules.slice(startIndex, endIndex);
+
+            displaySubmodules(paginatedSubmodules, startIndex);
+            updatePaginationControlsContent();
+        }
+
+        // Update pagination controls for content
+        function updatePaginationControlsContent() {
+            const totalPages = Math.ceil(allSubmodules.length / itemsPerPageContent);
+            const startIndex = (currentPageContent - 1) * itemsPerPageContent + 1;
+            const endIndex = Math.min(startIndex + itemsPerPageContent - 1, allSubmodules.length);
+
+            // Update info text
+            const infoText = allSubmodules.length === 0
+                ? 'Showing 0 to 0 of 0 entries'
+                : `Showing ${startIndex} to ${endIndex} of ${allSubmodules.length} entries`;
+            document.getElementById('tableInfoContent').textContent = infoText;
+            document.getElementById('tableInfoContentBottom').textContent = infoText;
+
+            // Generate pagination buttons
+            const pagination = document.getElementById('paginationContent');
+            pagination.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPageContent === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPageContent - 1}">Previous</a>`;
+            pagination.appendChild(prevLi);
+
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPageContent - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPageContent ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                pagination.appendChild(li);
+            }
+
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPageContent === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPageContent + 1}">Next</a>`;
+            pagination.appendChild(nextLi);
+
+            // Add click handlers
+            pagination.querySelectorAll('.page-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(e.target.getAttribute('data-page'));
+                    if (page > 0 && page <= totalPages) {
+                        currentPageContent = page;
+                        renderPaginatedSubmodules();
+                    }
+                });
+            });
         }
 
         // Update statistics based on submodules data
@@ -644,8 +607,8 @@
             document.getElementById('totalCount').textContent = totalCount;
         }
 
-        function displaySubmodules(submodules) {
-            const tbody = $('tbody');
+        function displaySubmodules(submodules, startIndex = 0) {
+            const tbody = $('#submodulesTableBody');
             if (submodules.length === 0) {
                 tbody.html('<tr><td colspan="5" class="text-center py-32"><p class="text-secondary-light">Belum ada sub-modul. Klik tombol "Tambah Konten" untuk mulai.</p></td></tr>');
                 return;
@@ -655,7 +618,7 @@
                 return `
                 <tr>
                     <td class="text-center">
-                        <span class="text-secondary-light fw-medium">${String(index + 1).padStart(2, '0')}</span>
+                        <span class="text-secondary-light fw-medium">${String(startIndex + index + 1).padStart(2, '0')}</span>
                     </td>
                     <td>
                         <h6 class="text-md mb-0 fw-semibold">${item.title}</h6>
@@ -800,6 +763,13 @@
                 saveBtn.disabled = false;
                 saveBtn.innerHTML = originalText;
             }
+        });
+
+        // Items per page change handler
+        document.getElementById('itemsPerPageContent').addEventListener('change', (e) => {
+            itemsPerPageContent = parseInt(e.target.value);
+            currentPageContent = 1;
+            renderPaginatedSubmodules();
         });
 
         // Load data on page load

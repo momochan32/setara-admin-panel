@@ -188,6 +188,23 @@
         </div>
 
         <div class="card-body p-24">
+            <!-- Pagination Controls Top -->
+            <div class="d-flex justify-content-between align-items-center mb-16">
+                <div class="d-flex align-items-center gap-2">
+                    <label class="text-sm text-secondary-light">Show:</label>
+                    <select id="itemsPerPage" class="form-select form-select-sm" style="width: auto;">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <span class="text-sm text-secondary-light">entries</span>
+                </div>
+                <div>
+                    <span class="text-sm text-secondary-light" id="tableInfo">Showing 0 to 0 of 0 entries</span>
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table class="table bordered-table mb-0" id="modulesTable">
                     <thead>
@@ -205,6 +222,18 @@
                         <!-- Modules will be loaded here -->
                     </tbody>
                 </table>
+            </div>
+
+            <!-- Pagination Controls Bottom -->
+            <div class="d-flex justify-content-between align-items-center mt-16">
+                <div>
+                    <span class="text-sm text-secondary-light" id="tableInfoBottom">Showing 0 to 0 of 0 entries</span>
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0" id="pagination">
+                        <!-- Pagination buttons will be generated here -->
+                    </ul>
+                </nav>
             </div>
 
             <!-- Module Statistics -->
@@ -338,6 +367,11 @@
         const moduleModal = new bootstrap.Modal(document.getElementById('moduleModal'));
         let currentEditId = null;
 
+        // Pagination variables
+        let allModules = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+
         // Get cluster ID from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const selectedClusterId = urlParams.get('cluster_id');
@@ -424,7 +458,7 @@
                 );
 
                 // Build modules array with cached data
-                const modules = querySnapshot.docs.map(docSnap => {
+                allModules = querySnapshot.docs.map(docSnap => {
                     const moduleData = { id: docSnap.id, ...docSnap.data() };
 
                     if (moduleData.clusterId) {
@@ -437,12 +471,82 @@
                     return moduleData;
                 });
 
-                displayModules(modules);
-                updateStatistics(modules);
+                updateStatistics(allModules);
+                renderPaginatedModules();
             } catch (error) {
                 console.error('Error loading modules:', error);
                 tbody.html('<tr><td colspan="7" class="text-center"><div class="alert alert-danger">Gagal memuat data: ' + error.message + '</div></td></tr>');
             }
+        }
+
+        // Render paginated modules
+        function renderPaginatedModules() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedModules = allModules.slice(startIndex, endIndex);
+
+            displayModules(paginatedModules, startIndex);
+            updatePaginationControls();
+        }
+
+        // Update pagination controls
+        function updatePaginationControls() {
+            const totalPages = Math.ceil(allModules.length / itemsPerPage);
+            const startIndex = (currentPage - 1) * itemsPerPage + 1;
+            const endIndex = Math.min(startIndex + itemsPerPage - 1, allModules.length);
+
+            // Update info text
+            const infoText = allModules.length === 0
+                ? 'Showing 0 to 0 of 0 entries'
+                : `Showing ${startIndex} to ${endIndex} of ${allModules.length} entries`;
+            document.getElementById('tableInfo').textContent = infoText;
+            document.getElementById('tableInfoBottom').textContent = infoText;
+
+            // Generate pagination buttons
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>`;
+            pagination.appendChild(prevLi);
+
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            if (endPage - startPage < maxVisiblePages - 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                pagination.appendChild(li);
+            }
+
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>`;
+            pagination.appendChild(nextLi);
+
+            // Add click handlers
+            pagination.querySelectorAll('.page-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(e.target.getAttribute('data-page'));
+                    if (page > 0 && page <= totalPages) {
+                        currentPage = page;
+                        renderPaginatedModules();
+                    }
+                });
+            });
         }
 
         // Update statistics based on modules data
@@ -464,7 +568,7 @@
             document.getElementById('submoduleCount').textContent = totalSubmodules;
         }
 
-        function displayModules(modules) {
+        function displayModules(modules, startIndex = 0) {
             const tbody = $('#modulesTableBody');
             if (modules.length === 0) {
                 tbody.html('<tr><td colspan="7" class="text-center py-32"><p class="text-secondary-light">Belum ada modul. Klik tombol "Tambah Modul" untuk mulai.</p></td></tr>');
@@ -474,7 +578,7 @@
             tbody.html(modules.map((module, index) => `
                 <tr>
                     <td class="text-center">
-                        <span class="text-secondary-light fw-medium">${String(index + 1).padStart(2, '0')}</span>
+                        <span class="text-secondary-light fw-medium">${String(startIndex + index + 1).padStart(2, '0')}</span>
                     </td>
                     <td>
                         <h6 class="text-md mb-0 fw-semibold">${module.title}</h6>
@@ -613,6 +717,13 @@
                 saveBtn.disabled = false;
                 saveBtn.innerHTML = originalText;
             }
+        });
+
+        // Items per page change handler
+        document.getElementById('itemsPerPage').addEventListener('change', (e) => {
+            itemsPerPage = parseInt(e.target.value);
+            currentPage = 1;
+            renderPaginatedModules();
         });
 
         // Load data on page load
